@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'colab_app.urls'
+ROOT_URLCONF = 'colab_project.urls'
 
 TEMPLATES = [
     {
@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'colab_app.wsgi.application'
+WSGI_APPLICATION = 'colab_project.wsgi.application'
 
 
 # Database

@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "colab_app.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "colab_project.settings")
 
 application = get_wsgi_application()
