@@ -1,5 +1,5 @@
 """
-WSGI config for labaware_project project.
+WSGI config for colab_project project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "labaware_project.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "colab_project.settings")
 
 application = get_wsgi_application()
