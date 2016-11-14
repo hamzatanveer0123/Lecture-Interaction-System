@@ -12,3 +12,213 @@ body{
 .navbar-logo{
     width: 100px;
 }
+.wrapper{
+    margin-top: 10%;
+    margin-right: 20%;
+    margin-left: 20%;
+}
+
+.lab-map-container{
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.student_seat {
+    width: 25px;
+    height: 25px;
+    margin-left: 20px;
+    padding-left: 0px;
+    -webkit-align-self: center;
+    -ms-flex-item-align: center;
+    align-self: center;
+    -webkit-box-ordinal-group: 1;
+    -webkit-order: 0;
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 auto;
+    -ms-flex: 0 auto;
+    flex: 0 auto;
+    border-radius: 3px;
+    background-image: -webkit-linear-gradient(270deg, rgba(65, 65, 65, .3), rgba(65, 65, 65, .3));
+    background-image: linear-gradient(180deg, rgba(65, 65, 65, .3), rgba(65, 65, 65, .3));
+    cursor: pointer;
+}
+
+.student_seat:hover {
+    border: 1px none #000;
+    -webkit-filter: brightness(200%);
+    filter: brightness(200%);
+}
+
+.student_seat.need_help {
+    background-image: -webkit-linear-gradient(270deg, rgba(0, 255, 20, .5), rgba(0, 255, 20, .5)), -webkit-linear-gradient(270deg, rgba(65, 65, 65, .5), rgba(65, 65, 65, .5));
+    background-image: linear-gradient(180deg, rgba(0, 255, 20, .5), rgba(0, 255, 20, .5)), linear-gradient(180deg, rgba(65, 65, 65, .5), rgba(65, 65, 65, .5));
+    -webkit-transition: -webkit-transform 250ms ease;
+    transition: -webkit-transform 250ms ease;
+    transition: transform 250ms ease;
+    transition: transform 250ms ease, -webkit-transform 250ms ease;
+    cursor: pointer;
+}
+
+.student_seat.need_help:hover {
+    border: 1px none #000;
+    -webkit-filter: brightness(200%);
+    filter: brightness(200%);
+}
+
+.student_seat.students_question {
+    position: static;
+    background-image: -webkit-linear-gradient(270deg, rgba(65, 65, 65, .3), rgba(65, 65, 65, .3));
+    background-image: linear-gradient(180deg, rgba(65, 65, 65, .3), rgba(65, 65, 65, .3));
+}
+
+.student_seat.students_question:hover {
+    -webkit-filter: brightness(200%);
+    filter: brightness(200%);
+}
+
+.students_map {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin: -20px 0px 10px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.student_row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding-top: 5px;
+    padding-right: 15px;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-box-align: start;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-align-self: baseline;
+    -ms-flex-item-align: baseline;
+    align-self: baseline;
+    -webkit-box-ordinal-group: 1;
+    -webkit-order: 0;
+    -ms-flex-order: 0;
+    order: 0;
+}
+
+.student_group {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-top: 20px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.student_column {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding-right: 0px;
+    padding-left: 0px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.student_column.vertical {
+    padding-right: 5px;
+    padding-left: 5px;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.sitting_plan {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-self: center;
+    -ms-flex-item-align: center;
+    align-self: center;
+}
+
+.student_question {
+  width: 25px;
+  height: 25px;
+  margin-left: 20px;
+  border-radius: 3px;
+  background-image: -webkit-linear-gradient(270deg, #4caf50, #4caf50);
+  background-image: linear-gradient(180deg, #4caf50, #4caf50);
+  cursor: pointer;
+}
+
+
+.student_question2 {
+  width: 25px;
+  height: 25px;
+  margin-left: 20px;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  -webkit-box-ordinal-group: 1;
+  -webkit-order: 0;
+  -ms-flex-order: 0;
+  order: 0;
+  border-radius: 3px;
+  background-image: -webkit-linear-gradient(270deg, #ffc107, #ffc107);
+  background-image: linear-gradient(180deg, #ffc107, #ffc107);
+}
+

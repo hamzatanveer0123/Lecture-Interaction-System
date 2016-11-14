@@ -1,35 +1,172 @@
-{% load staticfiles %}
+{% extends 'skeleton.html' %}
+{% block body_block %}
 
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta charset="UTF-8">
-    <!-- CSS -->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static "css/style.css" %}" />
-    <title>Colab</title>
-</head>
-<body class="body">
+    <div class="wrapper">
+        <div class="lab-map-container">
+            <div class="students_map">
+                <div class="sitting_plan w-row">
+                    <div class="student_column w-col w-col-4">
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat students_question" data-ix="zoomquestion"></div>
+                                <div class="student_question" data-ix="getquestion">
+                                    <div class="overlay_student_question"></div>
+                                </div>
+                                <div class="student_question" data-ix="getquestion">
+                                    <div class="overlay_student_question"></div>
+                                </div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_question2" data-ix="getquestion-2"></div>
+                                <div class="student_question2" data-ix="getquestion-2"></div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_question" data-ix="getquestion">
+                                    <div class="overlay_student_question"></div>
+                                </div>
+                                <div class="student_question" data-ix="getquestion">
+                                    <div class="overlay_student_question"></div>
+                                </div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="student_column vertical w-col w-col-4">
+                        <div class="no_space student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_question" data-ix="getquestion">
+                                    <div class="overlay_student_question"></div>
+                                </div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_question" data-ix="getquestion">
+                                    <div class="overlay_student_question"></div>
+                                </div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_question" data-ix="getquestion">
+                                    <div class="overlay_student_question"></div>
+                                </div>
+                                <div class="student_question2" data-ix="getquestion-2"></div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="student_column w-col w-col-4">
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                        <div class="student_group">
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_question" data-ix="getquestion">
+                                    <div class="overlay_student_question"></div>
+                                </div>
+                            </div>
+                            <div class="student_row">
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                                <div class="student_seat"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#"><img class="navbar-logo" src="{% static "images/colablogo_w_trim.png" %}"/></a>
+        </div>
     </div>
-  </div><!-- /.container-fluid -->
-</nav>
 
-<div class="container">
- BLABLA
-</div>
-
-</body>
-{# jQuery #}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-</html>
+{% endblock %}
