@@ -1,8 +1,35 @@
 {% extends 'skeleton.html' %}
+{% load staticfiles %}
+
 {% block body_block %}
 
+    <div class="question_window" data-ix="getquestion">
+        <div class="question_text"><img class="student_profile_image" src="https://d3e54v103j8qbb.cloudfront.net/img/image-placeholder.svg">
+            <p class="question_title1">This is a sample question by some student?</p><img class="question_image" sizes="100vw" src="{% static "images/sampleImageQuestion1.png" %}" srcset="{% static "images/sampleImageQuestion1.png" %} 500w, {% static "images/sampleImageQuestion1.png" %} 720w" width="130">
+            <div class="comment_text_1">
+                <p>this is someones sample reply</p>
+            </div>
+            <div>
+                <div class="comment_text_1 sender">
+                    <p>this is my sample reply</p>
+                </div>
+            </div>
+            <div>
+                <div class="comment_text_1">
+                    <p>this is someones sample reply</p>
+                </div>
+            </div>
+            <div class="form_wrapper w-form">
+                <form class="comment_form w-clearfix" data-name="CommentForm" id="wf-form-CommentForm" name="wf-form-CommentForm">
+                    <textarea class="comment w-input" data-name="Field 2" id="field-2" maxlength="5000" name="field-2" placeholder="Example Text"></textarea>
+                    <input class="submit_button w-button" data-wait="Please wait..." type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="wrapper">
         <div class="lab-map-container">
+            <h1>Laboratory View</h1>
             <div class="students_map">
                 <div class="sitting_plan w-row">
                     <div class="student_column w-col w-col-4">
