@@ -17,7 +17,7 @@
       <sourceFolder url="file://$MODULE_DIR$/LabAware/LabAware" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/colab_project" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 2.7.11 virtualenv at ~/OneDrive/colab/colab_Project/colab/colab_virtualenv" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 2.7.11 virtualenv at ~/colab/colab_Project/colab/colab_virtualenv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">
