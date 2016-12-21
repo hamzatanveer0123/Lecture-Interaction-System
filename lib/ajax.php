@@ -33,6 +33,40 @@ function UpdatePosts(id)
 </script>";
 }
 
+//H2 update
+function getChatUpdateAJAXScript($questionID)
+{
+    return "<script lang=\"JavaScript\">
+function httpGet(theUrl)
+{
+    var xmlHttp = null;
+
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlHttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlHttp=new ActiveXObject(\"Microsoft.XMLHTTP\");
+	  }
+    xmlHttp.open( \"GET\", theUrl, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+UpdatePosts({$questionID});
+window.setInterval(function(){UpdatePosts({$questionID})},500);
+
+function UpdatePosts(id)
+{
+    var updateURL = 'getchat.php?questionID='+id+'&nocache='+new Date().getTime();
+    var text = httpGet(updateURL);
+    document.getElementById('messages').innerHTML = text;
+}
+
+</script>";
+}
+
 
 
 function getLiveResponseUpdateAJAXScript($sessionID)

@@ -1,5 +1,5 @@
 <?php
-    
+
 /*
 $deviceType = 'unknown';
 if(requestSet('mode'))

@@ -1,0 +1,185 @@
+#main {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#main #content {
+    background-color: transparent !important;
+    border: 0px solid #ccc !important;
+    padding: 20px;
+    overflow: hidden;
+}
+
+#pageHeader{
+    display: none !important;
+}
+
+#content:after {
+    content:"";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 2px solid #cccccc;
+    text-shadow: 0px 2px 2px rgba(114, 114, 114, 1);
+}
+
+.message-container{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 17%;
+    padding: 10px 25%;
+    max-height: 80%;
+    overflow: scroll;
+    visibility: hidden;
+}
+
+
+.form-container{
+    position: absolute;
+    width: 100%;
+    height: 10%;
+    left: 0;
+    bottom: 5%;
+    padding-right: 25%;
+    padding-left: 25%;
+    visibility: hidden;
+}
+
+#add_studentsQuestion{
+    margin-bottom: 0px !important;
+}
+
+#add_studentsQuestion .form-group {
+    margin-bottom: 0px;
+}
+
+.ask-question-textarea{
+    width: 100% !important;
+    border: 0px solid !important;
+    border-radius: 5px !important;
+    -webkit-box-shadow: 0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
+    -moz-box-shadow:    0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
+    box-shadow:         0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
+}
+
+.submit-question{
+    position:absolute;
+    bottom:23px;
+    right:8px;
+    border: 0px solid transparent !important;
+    border-radius: 100px !important;
+    background-color: #197fcd !important;
+    background-image: url("icons/icon-send.png") !important;
+    background-repeat: no-repeat !important;
+    background-size: 24px 24px;
+    background-position: 11px 13px;
+    width: 48px !important;
+    height: 48px !important;
+    padding: 10px !important;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    -webkit-box-shadow: 0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
+    -moz-box-shadow:    0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
+    box-shadow:         0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
+}
+
+.submit-question:hover{
+    background-position: 11px 13px !important;
+    box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
+}
+
+.ask-question{
+    background: white;
+    color: #3c3c3c;
+    padding: 18px 10px 8px 20px !important;
+    /*padding: 30px !important;*/
+    /*margin: 15px;*/
+    border-radius: 5px;
+    -webkit-box-shadow: 0px 3px 3px 0px rgba(124, 124, 124, 0.3);
+    -moz-box-shadow:    0px 3px 3px 0px rgba(124, 124, 124, 0.3);
+    box-shadow:         0px 3px 3px 0px rgba(124, 124, 124, 0.3);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    cursor: pointer;
+    float: none !important;
+    margin: 0 auto 20px;
+}
+.ask-question:hover{
+    box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3);
+}
+
+.ask-question p {
+    padding-left: 8px;
+    padding-right: 8px;
+    text-decoration: none;
+}
+
+.bubble-for-badge{
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    background: #197fcd;
+    border-radius: 100px;
+    padding: 10px;
+    z-index: 999;
+    -webkit-box-shadow: 0px 3px 3px 0px rgba(124, 124, 124, 0.5);
+    -moz-box-shadow:    0px 3px 3px 0px rgba(124, 124, 124, 0.5);
+    box-shadow:         0px 3px 3px 0px rgba(124, 124, 124, 0.5);
+}
+
+.card-badge{
+    width: 26px;
+    height: 26px;
+}
+
+/*jQuery toggles*/
+.hide-unImpQuestion{
+    float: none !important;
+    width: 32px !important;
+    height: 32px;
+    border-radius: 100px;
+    margin: 0 auto 12px;
+}
+
+.link{
+    color: #3c3c3c
+}
+
+/* Overrides for Bootstrap's mobile theme */
+
+@media (min-width: 768px) {
+
+}
+
+@media (max-width: 767px) {
+
+    .message-container{
+        bottom: 17%;
+        padding-right: 8%;
+        padding-left: 8%;
+    }
+
+    .form-container{
+        bottom: 8%;
+        padding-right: 8%;
+        padding-left: 8%;
+    }
+
+    .bubble-for-badge{
+        right: -10px;
+        top: -10px;
+    }
+
+    .card-badge{
+        width: 21px;
+        height: 21px;
+    }
+
+    .hide-unImpQuestion{
+        width: 32px !important;
+        height: 32px;
+        margin: 0 auto 12px;
+    }
+
+}

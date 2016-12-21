@@ -4,7 +4,7 @@ date_default_timezone_set('UTC');
 require_once('corelib/safeRequestFunctions.php');
 require_once('corelib/templateMerge.php');
 
-include_once('../../yacrs_config.php');
+include_once('yacrs_config.php');
 $CFG['breadCrumb'] = '<ul class="breadcrumb">';
  
  

@@ -145,7 +145,7 @@ else
 	        foreach($sessions as $s)
 	        {
 	            $ctime = strftime("%A %e %B %Y at %H:%M", $s->created);
-	            $template->pageData['mainBody'] .= "<li><a href='vote.php?sessionID={$s->id}'>{$s->title}</a>";
+	            $template->pageData['mainBody'] .= "<li><a href='vote.php?sessionID={$s->id}'>{$s->title}</a> - <a href='addQuestion.php?sessionID={$s->id}'>Add Questions</a> - <a href='viewQuestions.php?sessionID={$s->id}'>View Questions</a>";
                 if((isset($s->extras['allowFullReview']))&&($s->extras['allowFullReview']))
                      $template->pageData['mainBody'] .= " (<a href='review.php?sessionID={$s->id}'>Review previous answers</a>)";
                 $template->pageData['mainBody'] .= "</li>";
