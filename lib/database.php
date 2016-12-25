@@ -228,6 +228,8 @@ function initializeDataBase_yacrs()
     dataConnection::runQuery($query);
     $query = "CREATE TABLE yacrs_chat_messages(id INTEGER PRIMARY KEY AUTO_INCREMENT, session_id VARCHAR(35), question_id INTEGER, student_id INTEGER, message TEXT, posted DATE, viewed INTEGER);";
     dataConnection::runQuery($query);
+    $query = "CREATE TABLE yacrs_question_liked(id INTEGER PRIMARY KEY AUTO_INCREMENT, session_id INTEGER, question_id INTEGER, student_id VARCHAR(35), liked INTEGER, posted DATETIME);";
+    dataConnection::runQuery($query);
 }
 
 function updateDataBase_yacrs_v0_to_v0p2p0()
@@ -2946,6 +2948,11 @@ class studentsQuestion
     }
     //[[USERCODE_yacrs_studentsQuestion]] Put code for custom class members in this block.
 
+    function plusOneAttention($qId){
+        $query = "UPDATE yacrs_studentsQuestion SET needs_attention = needs_attention + 1 WHERE id='".dataConnection::safe($qId)."';";
+        return dataConnection::runQuery($query);
+    }
+
     //[[USERCODE_yacrs_studentsQuestion]] WEnd of custom class members.
 }
 
@@ -3201,6 +3208,18 @@ class question_liked
         return $out;
     }
     //[[USERCODE_yacrs_question_liked]] Put code for custom class members in this block.
+
+    static function checkIfLiked($qId,$sId)
+    {
+        $query = "SELECT * FROM yacrs_question_liked WHERE question_id='".dataConnection::safe($qId)."' AND student_id='".dataConnection::safe($sId)."';";
+        $result = dataConnection::runQuery($query);
+        if(sizeof($result)!=0)
+        {
+            return true;
+        }
+        else
+            return false;
+    }
 
     //[[USERCODE_yacrs_question_liked]] WEnd of custom class members.
 }

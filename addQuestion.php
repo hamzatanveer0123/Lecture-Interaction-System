@@ -110,4 +110,4 @@ function addQuestion($sessionId, $forceTitle=false)
 }
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="javascript/add_studentsQuestion.js"></script>
+<script src="javascript/viewQuestions.js"></script>

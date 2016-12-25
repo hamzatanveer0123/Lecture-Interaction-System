@@ -17,65 +17,156 @@ $lastMsgID = isset($_REQUEST['mID'])? $_REQUEST['mID']:"0";
 echo displayNewQuestions($sessionId, $lastMsgID);
 function displayNewQuestions($sessionId, $lastMsgID)
 {
+    $uinfo = checkLoggedInUser();
+    $loggedInUser = $uinfo['uname'];
     $questions = studentsQuestion::retrieve_sessionNewQuestions($sessionId, $lastMsgID);
     $out = "";
     if($questions) {
         for ($i = 0; $i < sizeof($questions); $i++) {
 
-            $question = $questions[$i];
-            $qId = $questions[$i]->id;
+            $question       = $questions[$i];
+            $qId            = $questions[$i]->id;
             $needsAttention = $questions[$i]->needs_attention;
-            $studentId = $questions[$i]->student_id;
-            $questionText = $questions[$i]->question;
+            $studentId      = $questions[$i]->student_id;
+            $questionText   = $questions[$i]->question;
 
-            $ifReaction = checkReaction($question);
-            $hiddenQiD = "<input type='hidden' class='lastMsgID' value='$qId'>";
+            if($question) {
 
-            if ($ifReaction) {
-                $badge = "<span class='bubble-for-badge' onclick='plusplusNeedHelp($qId)'><img class='card-badge' src='html/icons/badge-like.png'/></span>";
-                $class = "";
-            } else {
-                $badge = "<span class='bubble-for-badge close-unImpQuestion' onclick='plusplusNeedHelp($qId)'><img class='card-badge' src='html/icons/badge-like.png'/></span>";
-                $class = "no-reaction";
+                $fontSize = (13 + ($needsAttention / 0.5));
+
+                if ($fontSize > 40) {
+                    $fontSize = "40px";
+                } else {
+                    $fontSize = $fontSize . "px";
+                }
+
+                $ifActive       = ifActive($question);
+                $beingDiscussed = ifBeingDiscussed($question);
+
+                $liked = question_liked::checkIfLiked($qId, $loggedInUser);
+
+                //to get new questions after the ID
+                $hiddenQiD = "<input type='hidden' class='lastMsgID' value='$qId'>";
+
+                $buttons = "<a class='card-buttons comments' href='ask_question_chat.php?quId=$qId&sessionID=$sessionId'>
+                            <i class='fa fa-comments-o' aria-hidden='true'></i> discuss
+                        </a>";
+
+                if ($liked) {
+                    $buttons .= "<span class='card-buttons button-pressed'onclick='plusplusLike($sessionId,$qId,0)'>
+                                <i class='fa fa-exclamation' aria-hidden='true'></i> important
+                              </span>";
+                } else {
+                    $buttons .= "<span class='card-buttons badge-question-$qId' onclick='plusplusLike($sessionId,$qId,1)'>
+                                <i class='fa fa-exclamation' aria-hidden='true'></i> important
+                              </span>";
+                }
+
+                $showBadge = "<span class='bubble-for-badge badge-discussion-$qId'>
+                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
+                          </span>";
+
+                $hideBadge = "<span class='bubble-for-badge badge-discussion-$qId' style='display: none'>
+                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
+                          </span>";
+
+                //check if there is any reaction on question
+                if ($ifActive || $beingDiscussed) {
+                    $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
+                    $out .= "<div class='col-sm-12 ask-question question-$qId'>
+                            <div class='question-content'>
+                                $hiddenQiD
+                                <p class='question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
+                                <hr/>
+                                <div style='display: flex; text-align: center; color: #888'>
+                                $badge
+                                <span class='bubble-for-badge badge-close-$qId' style='display: none'>
+                                    <img class='card-badge' src='html/icons/icon-close.png'/>
+                                </span>
+                                $buttons
+                                </div>
+                            </div>
+                         </div>";
+                } else {
+                    $hide  = "hide-card-details";
+                    $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
+                    $out .= "<div class='col-sm-12 ask-question question-$qId hide-unImpQuestion'>
+                            <div class='question-content $hide'>
+                                $hiddenQiD
+                                <p class='question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
+                                <hr/>
+                                <div style='display: flex; text-align: center; color: #888'>
+                                $badge
+                                <span class='bubble-for-badge badge-close-$qId' onclick='closeQuestionCard($qId)'>
+                                    <img class='card-badge' src='html/icons/icon-close.png'/>
+                                </span>
+                                $buttons
+                                </div>
+                            </div>
+                         </div>";
+                }
             }
-
-            $needHelp = "<div class='needs-attention-badge' style='width: 100%;'>
-                        <i  onclick='plusplusNeedHelp($qId)'  class='fa fa-exclamation' style='color: white; background: #197fcd; padding: 10px; border-radius: 10px' aria-hidden='true'>
-                        " . $needsAttention . "
-                        </i>
-                     </div>";
-
-            //make div close when cross is pressed!
-            if ($questions[$i]) {
-                $out .= "<div class='col-sm-12 ask-question $class'>$hiddenQiD$badge<a class='link' href='ask_question_chat.php?quId=" . $qId . "&sessionID=$sessionId'><p title='Asked By: " . $studentId . "'>" . $questionText . "</p></a>$needHelp</div>";
-            }
-
         }
     }
     return $out;
 }
-
 //need more conditions like
 //if a question has been posted for more than 6hours - close it
 //if a question has been answered - close it
 //think of more
-function checkReaction($q){
+function ifActive($q){
     $qId            = $q->id;
+    $posted         = $q->timeadded;
     $attentionCount = (int)$q->needs_attention;
-    $answered       = $q->viewed;
-    $messages       = chat_messages::retrieve_chat_messages_matching("question_id",$qId,"","","id DESC");
+    //$answered       = $q->viewed;
 
-    if(isset($q)) {
+    $timePosted     = dataConnection::time2db($posted);
+
+    // check if question has been posted within last
+    // two hours than keep it open!
+    if($timePosted){
+        $timeNow = dataConnection::time2db(time());
+
+        $date1Timestamp = strtotime($timePosted);
+        $date2Timestamp = strtotime($timeNow);
+
+        //find difference between two times
+        $difference = round(abs($date1Timestamp - $date2Timestamp) / 60,2);
+        if($difference < 60*2) return true;
+    }
+    return false;
+}
+
+function ifBeingDiscussed($q){
+
+    $qId            = $q->id;
+    $posted         = $q->timeadded;
+    $attentionCount = (int)$q->needs_attention;
+    //$answered       = $q->viewed;
+
+    // else if question has been posted more than two
+    // hours ago then check other conditions and dec-
+    // ide either it will stay open or close.
+
+    // conditions for it to stay open
+    // 1. If it has any active conversation since 2hrs
+    // 2. If it has been marked important more than twice
+
+    $messages = chat_messages::retrieve_chat_messages_matching("question_id",$qId,"","","id DESC");
+
+    if($messages) {
         $date1 = dataConnection::time2db($messages[0]->posted);
         $date2 = dataConnection::time2db(time());
 
         $date1Timestamp = strtotime($date1);
         $date2Timestamp = strtotime($date2);
 
-        $difference = ($date2Timestamp - $date1Timestamp)/60;
-        //make a valid difference to make question inactive
+        $difference = round(abs($date1Timestamp - $date2Timestamp) / 60,2);
+        //var_dump("last message " . ($difference) . " mins ago");
 
-        if(($difference > 60*10 || $attentionCount > 0) && (!$answered)){
+        //1. add '&& (!$answered)' if u want to check if
+        //question has been answered or not...
+        if(($difference < 60*2)){
             return true;
         }else {
             return false;

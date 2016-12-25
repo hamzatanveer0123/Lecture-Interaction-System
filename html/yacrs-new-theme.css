@@ -1,3 +1,7 @@
+body{
+    background: #e0e0e0 !important;
+}
+
 #main {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -23,6 +27,11 @@
     left: 50%;
     border-left: 2px solid #cccccc;
     text-shadow: 0px 2px 2px rgba(114, 114, 114, 1);
+}
+
+hr{
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
 }
 
 .message-container{
@@ -93,7 +102,7 @@
 .ask-question{
     background: white;
     color: #3c3c3c;
-    padding: 18px 10px 8px 20px !important;
+    padding: 10px 5px 13px 5px !important;
     /*padding: 30px !important;*/
     /*margin: 15px;*/
     border-radius: 5px;
@@ -113,6 +122,21 @@
     padding-left: 8px;
     padding-right: 8px;
     text-decoration: none;
+}
+
+.card-buttons{
+    width: 50%;
+}
+
+.button-pressed{
+    color: #197fcd;
+    font-weight: 800;
+}
+
+.comments{
+    border-right: 1px solid #eee;
+    color: #888;
+    text-decoration: none
 }
 
 .bubble-for-badge{
@@ -143,7 +167,14 @@
 }
 
 .link{
-    color: #3c3c3c
+    width: 50%;
+    border-right: 1px solid #eee;
+    color: #888;
+    text-decoration: none
+}
+
+.hide-card-details{
+    display: none;
 }
 
 /* Overrides for Bootstrap's mobile theme */
@@ -164,11 +195,6 @@
         bottom: 8%;
         padding-right: 8%;
         padding-left: 8%;
-    }
-
-    .bubble-for-badge{
-        right: -10px;
-        top: -10px;
     }
 
     .card-badge{

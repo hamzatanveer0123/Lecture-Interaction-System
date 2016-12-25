@@ -6,35 +6,25 @@ $( document ).ready(function() {
 
     loadPage();
 
-    //hide initially
-    $(".no-reaction").toggleClass("hide-unImpQuestion");
-    $(".no-reaction a").toggle();
-    $(".no-reaction div").toggle();
-    $(".close-unImpQuestion").toggle();
-
     //expand on click
     $(".hide-unImpQuestion").click(function (e) {
 
+        //if close button is pressed!
+        var target = e.target.className;
+        if(target == "card-badge" || (target.indexOf("bubble-for-badge") == 0)) return false;
+
         //to create smooth animation  of opening and closing
-        var WAIT;
-        if($(this).css("width") == "32px") WAIT = 60;
-        else WAIT = 10;
+        var WAIT = 40;
 
-        var linkToHide  = $(this).find('.link');
-        var closeButton = $(this).find('.close-unImpQuestion');
-        var attenButton = $(this).find(".needs-attention-badge")
-
+        var cardContent     = $(this).find('.question-content');
         setTimeout(function(){
-            $(linkToHide).toggle();
-            $(closeButton).toggle();
-            $(attenButton).toggle();
+            $(cardContent).show();
         }, WAIT);
 
         //toggle to open and close card
-        $(this).toggleClass("hide-unImpQuestion");
+        $(this).removeClass("hide-unImpQuestion");
 
     });
-
 });
 
 $('#add_studentsQuestion').on('submit', function (e) {
@@ -47,6 +37,7 @@ $('#add_studentsQuestion').on('submit', function (e) {
             success: function (data) {
                 console.log(data);
                 $(".message-container").animate({ scrollTop: $(".message-container").prop("scrollHeight")}, "slow");
+                $('textarea[name="question"]').val("");
             },
             failure: function (data) {
                 alert(data);
@@ -72,19 +63,37 @@ function loadPage() {
 
 }
 
-function plusplusNeedHelp(qId) {
-    //H2 create a new table
+function plusplusLike(sId,qId,liked) {
     $.ajax({
-        type: 'post',
-        url: 'upvoteQuestion.php',
-        data: $('form').serialize(),
+        type: 'get',
+        url: 'ajax_likeQuestion.php?sessionID='+sId+'&questionID='+qId+'&liked='+liked,
         success: function (data) {
             console.log(data);
+            if(liked = 1)
+                $(".badge-question-"+qId).css("color","#197fcd");
+            else
+                $(".badge-question-"+qId).css("color","#888");
         },
         failure: function (data) {
             alert(data);
         }
     });
+}
+
+function closeQuestionCard(qId) {
+
+    var qDiv = $(".badge-close-"+qId).parentsUntil($("ask-question"),".col-sm-12");
+
+    var contentDiv = $(qDiv).find('div')[0];
+    $(contentDiv).hide();
+
+    //to create smooth animation  of opening and closing
+    var WAIT = 40;
+    setTimeout(function(){
+        //toggle to open and close card
+        $(qDiv).addClass("hide-unImpQuestion");
+    }, WAIT);
+
 }
 
 

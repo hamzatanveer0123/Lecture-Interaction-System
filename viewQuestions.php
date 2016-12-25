@@ -13,9 +13,6 @@ $template = new templateMerge($TEMPLATE);
 
 $uinfo = checkLoggedInUser();
 
-//store id of last message
-$LAST_MESSAGE_ID = 0;
-
 $template->pageData['pagetitle'] = $CFG['sitetitle'];
 $template->pageData['homeURL'] = $_SERVER['PHP_SELF'];
 
@@ -66,12 +63,12 @@ echo $template->render();
 
 function displayQuestions($sessionId)
 {
-    global $LAST_MESSAGE_ID;
 
-    $out = "";
+    global $uinfo;
+
+    $loggedInUser = $uinfo['uname'];
     $questions = studentsQuestion::retrieve_sessionQuestions($sessionId);
-
-    $out .= "<div class='message-container'>";
+    $out = "<div class='message-container'>";
 
     for ($i = 0; $i < sizeof($questions); $i++) {
 
@@ -80,34 +77,83 @@ function displayQuestions($sessionId)
         $needsAttention = $questions[$i]->needs_attention;
         $studentId      = $questions[$i]->student_id;
         $questionText   = $questions[$i]->question;
-        //$timeadded      = $questions[$i]->timeadded;
 
-        $LAST_MESSAGE_ID = $qId;
+        if($question) {
 
-        $ifReaction = checkReaction($question);
-        $hiddenQiD = "<input type='hidden' class='lastMsgID' value='$qId'>";
+            $fontSize = (13 + ($needsAttention / 0.5));
 
-        if($ifReaction){
-            $badge = "<span class='bubble-for-badge' onclick='plusplusNeedHelp($qId)'><img class='card-badge' src='html/icons/badge-like.png'/></span>";
-            $class = "";
-        } else {
-            $badge = "<span class='bubble-for-badge close-unImpQuestion' onclick='plusplusNeedHelp($qId)'><img class='card-badge' src='html/icons/badge-like.png'/></span>";
-            $class = "no-reaction";
-        }
+            if ($fontSize > 40) {
+                $fontSize = "40px";
+            } else {
+                $fontSize = $fontSize . "px";
+            }
 
-        $needHelp = "<div class='needs-attention-badge' style='width: 100%;'>
-                        <i  onclick='plusplusNeedHelp($qId)'  class='fa fa-exclamation' style='color: white; background: #197fcd; padding: 10px; border-radius: 10px' aria-hidden='true'>
-                        ".$needsAttention."
-                        </i>
-                     </div>";
+            $ifActive       = ifActive($question);
+            $beingDiscussed = ifBeingDiscussed($question);
 
-        //make div close when cross is pressed!
-        if($questions[$i])
-        {
-            $out .= "<div class='col-sm-12 ask-question $class'>$hiddenQiD $badge<a class='link' href='ask_question_chat.php?quId=".$qId."&sessionID=$sessionId'><p title='Asked By: ".$studentId."'>".$questionText."</p></a></div>";
-        } else {
-            $out .= "no new questions<br/>";
-        }
+            $liked = question_liked::checkIfLiked($qId, $loggedInUser);
+
+            //to get new questions after the ID
+            $hiddenQiD = "<input type='hidden' class='lastMsgID' value='$qId'>";
+
+            $buttons = "<a class='card-buttons comments' href='ask_question_chat.php?quId=$qId&sessionID=$sessionId'>
+                            <i class='fa fa-comments-o' aria-hidden='true'></i> discuss
+                        </a>";
+
+            if ($liked) {
+                $buttons .= "<span class='card-buttons button-pressed'onclick='plusplusLike($sessionId,$qId,0)'>
+                                <i class='fa fa-exclamation' aria-hidden='true'></i> important
+                              </span>";
+            } else {
+                $buttons .= "<span class='card-buttons badge-question-$qId' onclick='plusplusLike($sessionId,$qId,1)'>
+                                <i class='fa fa-exclamation' aria-hidden='true'></i> important
+                              </span>";
+            }
+
+            $showBadge = "<span class='bubble-for-badge badge-discussion-$qId'>
+                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
+                          </span>";
+
+            $hideBadge = "<span class='bubble-for-badge badge-discussion-$qId' style='display: none'>
+                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
+                          </span>";
+
+            //check if there is any reaction on question
+            if ($ifActive || $beingDiscussed) {
+                $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
+                $out .= "<div class='col-sm-12 ask-question question-$qId'>
+                            <div class='question-content'>
+                                $hiddenQiD
+                                <p class='question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
+                                <hr/>
+                                <div style='display: flex; text-align: center; color: #888'>
+                                $badge
+                                <span class='bubble-for-badge badge-close-$qId' style='display: none'>
+                                    <img class='card-badge' src='html/icons/icon-close.png'/>
+                                </span>
+                                $buttons
+                                </div>
+                            </div>
+                         </div>";
+            } else {
+                $hide  = "hide-card-details";
+                $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
+                $out .= "<div class='col-sm-12 ask-question question-$qId hide-unImpQuestion'>
+                            <div class='question-content $hide'>
+                                $hiddenQiD
+                                <p class='question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
+                                <hr/>
+                                <div style='display: flex; text-align: center; color: #888'>
+                                $badge
+                                <span class='bubble-for-badge badge-close-$qId' onclick='closeQuestionCard($qId)'>
+                                    <img class='card-badge' src='html/icons/icon-close.png'/>
+                                </span>
+                                $buttons
+                                </div>
+                            </div>
+                         </div>";
+            }
+        } else { $out .= "<div class='col-sm-12 ask-question'><p>no new questions</p></div>"; }
     }
     $out .= "</div>";
     return $out;
@@ -120,10 +166,10 @@ function addQuestion($sessionId)
     {
         case FORM_NOTSUBMITTED:
             //$exampleform->setData($existingdata);
-            $output = $questionForm->getHtml();
+            $out = $questionForm->getHtml();
             break;
         case FORM_SUBMITTED_INVALID:
-            $output = $questionForm->getHtml();
+            $out = $questionForm->getHtml();
             break;
         case FORM_SUBMITTED_VALID:
             $data = new stdClass();
@@ -150,23 +196,58 @@ function addQuestion($sessionId)
 //if a question has been posted for more than 6hours - close it
 //if a question has been answered - close it
 //think of more
-function checkReaction($q){
+function ifActive($q){
     $qId            = $q->id;
+    $posted         = $q->timeadded;
     $attentionCount = (int)$q->needs_attention;
-    $answered       = $q->viewed;
-    $messages       = chat_messages::retrieve_chat_messages_matching("question_id",$qId,"","","id DESC");
+    //$answered       = $q->viewed;
 
-    if(isset($q)) {
+    $timePosted     = dataConnection::time2db($posted);
+
+    // check if question has been posted within last
+    // two hours than keep it open!
+    if($timePosted){
+        $timeNow = dataConnection::time2db(time());
+
+        $date1Timestamp = strtotime($timePosted);
+        $date2Timestamp = strtotime($timeNow);
+
+        //find difference between two times
+        $difference = round(abs($date1Timestamp - $date2Timestamp) / 60,2);
+        if($difference < 60*2) return true;
+    }
+    return false;
+}
+
+function ifBeingDiscussed($q){
+
+    $qId            = $q->id;
+    $posted         = $q->timeadded;
+    $attentionCount = (int)$q->needs_attention;
+    //$answered       = $q->viewed;
+
+    // else if question has been posted more than two
+    // hours ago then check other conditions and dec-
+    // ide either it will stay open or close.
+
+    // conditions for it to stay open
+    // 1. If it has any active conversation since 2hrs
+    // 2. If it has been marked important more than twice
+
+    $messages = chat_messages::retrieve_chat_messages_matching("question_id",$qId,"","","id DESC");
+
+    if($messages) {
         $date1 = dataConnection::time2db($messages[0]->posted);
         $date2 = dataConnection::time2db(time());
 
         $date1Timestamp = strtotime($date1);
         $date2Timestamp = strtotime($date2);
 
-        $difference = ($date2Timestamp - $date1Timestamp)/60;
-        //make a valid difference to make question inactive
+        $difference = round(abs($date1Timestamp - $date2Timestamp) / 60,2);
 
-        if(($difference > 60*10 || $attentionCount > 0) && (!$answered)){
+        //1. add '&& (!$answered)' if u want to check if
+        //question has been answered or not...
+        if(($difference < 60*2)){
             return true;
         }else {
             return false;
@@ -178,26 +259,66 @@ function checkReaction($q){
 
 function loadingScreen(){
     $out = "<div class='loading-screen' style='color: #197fcd; text-align: center; margin-top: 25%'>
-            <i class=\"fa fa-circle-o-notch fa-spin fa-5x fa-fw\"></i>
-            <span class=\"sr-only\">Loading...</span>
+            <i class='fa fa-circle-o-notch fa-spin fa-5x fa-fw'></i>
+            <span class='sr-only'>Loading...</span>
             </div>";
     return $out;
 }
 
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="javascript/add_studentsQuestion.js"></script>
+<script src="javascript/viewQuestions.js"></script>
 <script>
     setInterval("updateQuestions()",1000);
     function updateQuestions() {
+        var lastMsgVal = 0;
         var lastIdInput = $(".lastMsgId").last()[0];
-        var lastMsgVal  = lastIdInput.value;
+        if(lastIdInput != null){
+            lastMsgVal  = lastIdInput.value;
+        }
         $.ajax({
             url: 'ajax_new_questions.php?sID=<?php echo $sessionId; ?>&mID='+lastMsgVal,
             success: function(html) {
-//                $(".message-container").append("<center>New Questions</center>");
                 if (html.indexOf("ask-question") >= 0){
                     $(".message-container").append(html);
+                }
+            }
+        });
+    }
+
+    setInterval("checkFontSize()",10000);
+    function checkFontSize() {
+        $.ajax({
+            url: 'findChangeInAttention.php?sID=<?php echo $sessionId; ?>',
+            success: function(output) {
+                if (output){
+                    var pair = output.split(',');
+                    for(var i = 0; i < (pair.length-1); i++){
+                        var val = pair[i].split("|");
+                        console.log(val[0]+" -> "+val[1] + " -> " + val[2]);
+
+                        var q       = parseInt(val[0]);
+                        var font    = parseInt(val[1]);
+                        var convo   = parseInt(val[2]);
+                        //change font size if attention changes
+                        var fontSize = (13+(font/0.5));
+                        if(fontSize > 40) fontSize = "40px";
+                        else fontSize = fontSize+"px";
+                        $(".question-"+q).css("font-size",fontSize);
+
+                        //open/close question if in convo
+                        //not closing any div right now
+                        if(convo == 1){
+                            $(".badge-discussion-"+q).show();
+                            $(".badge-close-"+q).hide();
+                            $(".question-"+q).click();
+                        }
+                        else {
+                            //$(".badge-discussion-" + q).hide();
+                            //$(".badge-close-" + q).show();
+                            //closeQuestionCard(q);
+                        }
+                    }
                 }
             }
         });

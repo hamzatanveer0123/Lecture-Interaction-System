@@ -62,7 +62,7 @@ function displayQuestions($sessionId)
         $studentId      = $questions[$i]->student_id;
         $questionText   = $questions[$i]->question;
 
-        $ifReaction = checkReaction($question);
+        $ifReaction = ifActive($question);
 
         if($ifReaction){
             $badge = "<span class='bubble-for-badge'><img class='card-badge' src='html/icons/badge-like.png'/></span>";
