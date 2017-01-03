@@ -514,18 +514,19 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
     -webkit-box-shadow: 0px 2px 2px 0px rgba(187,187,187,1);
     -moz-box-shadow: 0px 2px 2px 0px rgba(187,187,187,1);
     box-shadow: 0px 2px 2px 0px rgba(187,187,187,1);
-    border-radius: 0px 15px 15px 15px;
+    border-radius: 2px 15px 15px 15px;
 }
 
 .comment.me .bubble {
-    background-color: #CCEC8C;
+    background-color: #32a1ea;
+	color: white;
     margin-left: 0;
     margin-right: 10px;
-    border-radius: 15px 0px 15px 15px;
+    border-radius: 15px 2px 15px 15px;
 }
 
 .info .bubble {
-    background-color: #AED7ED;
+    background-color: #CDDC39;
 }
 
 .comment.me .bubble:after {

@@ -270,6 +270,7 @@ else
                 }
             }
         }
+        $data['questionResponseInfo']['studentQuInfo'] = studentsQuestion::count("session_id",$session->id);
         break;
     case 'sessionlist':
    	    $sessions = session::retrieve_session_matching('ownerID', $uinfo['uname']);
