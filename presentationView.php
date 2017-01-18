@@ -1,5 +1,5 @@
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" media="Screen" href="html/yacrs-new-theme.css" />
+<link rel="stylesheet" type="text/css" media="Screen" href="html/yacrs-new-theme-presentation.css" />
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -52,7 +52,7 @@ else
         $template->pageData['mainBody'] .= addSortButton();
         $template->pageData['mainBody'] .= addToggleButton();
         $template->pageData['mainBody'] .= displayQuestions($sessionId);
-        $template->pageData['mainBody'] .= addQuestion($sessionId);
+//        $template->pageData['mainBody'] .= addQuestion($sessionId);
 
     }
     $template->pageData['logoutLink'] = loginBox($uinfo);
@@ -69,8 +69,13 @@ function displayQuestions($sessionId)
     global $uinfo;
 
     $loggedInUser = $uinfo['uname'];
-    $questions = studentsQuestion::retrieve_sessionQuestions($sessionId);
-    $out = "<div class='message-container'>";
+
+    $lastLikeID = question_liked::getLastLikeID($sessionId,0);
+
+    $out = "<input type='hidden' class='last-liked-id' value='$lastLikeID'/>";
+
+    $questions = studentsQuestion::retrieve_sessionImpQuestions($sessionId);
+    $out .= "<div class='message-container'>";
 
     for ($i = 0; $i < sizeof($questions); $i++) {
 
@@ -283,27 +288,18 @@ function addSortButton(){
 
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="javascript/viewQuestions.js"></script>
+<script src="javascript/presentationView.js"></script>
 
 <!--if new question is added, view all questions dont work-->
 
 <script>
     setInterval("updateQuestions()",1000);
     function updateQuestions() {
-        var lastMsgVal = 0;
-        //improve this
-        var divList    = $(".lastMsgId");
-        divList.sort(function(a, b){
-            return a.value > b.value ? 1 : -1;
-        });
-        var lastIdInput = divList.last()[0];
-        if(lastIdInput != null){
-            lastMsgVal  = lastIdInput.value;
-        }
+        var lastLikeID = $(".last-liked-id").val();
         $.ajax({
-            url: 'ajax_new_questions.php?sID=<?php echo $sessionId; ?>&mID='+lastMsgVal,
-            success: function(html) {
-                if (html.indexOf("ask-question") >= 0){
+            url: 'ajax_new_imp_questions.php?sID=<?php echo $sessionId; ?>&mID=' + lastLikeID,
+            success: function (html) {
+                if (html.indexOf("ask-question") >= 0) {
                     $(".message-container").append(html);
                 }
             }

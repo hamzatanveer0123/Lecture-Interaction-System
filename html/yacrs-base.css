@@ -334,6 +334,8 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
 	height: 74px;
 }
 
+
+/*H2 update css for comments improved bottom - confirm with naill */
 /*.comment, .info {*/
 	/*clear: both;*/
 	/*max-width: 70%;*/
@@ -505,7 +507,7 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
 .comment .bubble, .info .bubble {
     position: relative;
     width: 100%;
-    background-color: #eee;
+    background-color: #CDDC39;
     padding: 12px;
     border-radius: 4px;
     margin-left: 10px;
@@ -526,7 +528,7 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
 }
 
 .info .bubble {
-    background-color: #CDDC39;
+    background-color: #EEE;
 }
 
 .comment.me .bubble:after {
@@ -544,6 +546,37 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
 
 #add_questionChat .submit {
     border-radius: 100px;
+}
+
+
+.submit-reply{
+	position: absolute;
+	bottom: 14px;
+	right: 20px;
+	border: 0px solid transparent !important;
+	border-radius: 100px !important;
+	background-color: #197fcd !important;
+	background-image: url("icons/icon-send.png") !important;
+	background-repeat: no-repeat !important;
+	background-size: 24px 24px;
+	background-position: 11px 13px;
+	width: 48px !important;
+	height: 48px !important;
+	padding: 10px !important;
+	transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+	-webkit-box-shadow: 0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
+	-moz-box-shadow: 0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
+	box-shadow: 0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
+}
+
+.submit-reply:hover{
+	background-position: 11px 13px !important;
+	box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
+}
+
+.btn-best-answer{
+	border-radius: 100px;
+	float: right;
 }
 
 /* Overrides for Bootstrap's mobile theme */

@@ -483,6 +483,7 @@ function sessionCodeinput($target='vote.php', $sessionID=false)
     return $out;
 }
 
+
 class add_studentsQuestion extends nbform
 {
     var $form_magic_id = 'c80902ef8af0bc68c12e98ddbacc1655';
