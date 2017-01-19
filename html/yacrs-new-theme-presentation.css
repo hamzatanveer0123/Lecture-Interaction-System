@@ -38,9 +38,8 @@ hr{
     position: absolute;
     width: 100%;
     left: 0;
-    bottom: 17%;
-    padding: 10px 25%;
-    max-height: 80%;
+    padding: 0px 25%;
+    max-height: 90%;
     overflow: scroll;
     visibility: hidden;
 }

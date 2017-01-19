@@ -25,3 +25,20 @@ $('#add_questionChat').on('submit', function (e) {
         alert("please add message!");
     }
 });
+
+function selectBestAsnwer(questionId, messageId) {
+    $.ajax({
+        type: 'post',
+        url: 'ajax_setBestAnswer.php',
+        data: {
+            qID : questionId,
+            mID : messageId
+        },
+        success: function (data) {
+            console.log(data);
+        },
+        failure: function (data) {
+            alert(data);
+        }
+    });
+}

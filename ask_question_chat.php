@@ -94,15 +94,15 @@ else
         $question = studentsQuestion::retrieve_studentsQuestion_matching("id",$questionID);
         $questionText = $question[0]->question;
         $template->pageData['afterContent'] = getAJAXScript($thisSession->id, $questionID);
-        $template->pageData['breadcrumb'] .= "<li><a href='vote.php?sessionID={$thisSession->id}'>{$thisSession->title}</a></li>";
+        $template->pageData['breadcrumb'] .= "<li><a href='session_page.php?sessionID={$thisSession->id}'>{$thisSession->title}</a></li>";
         $template->pageData['breadcrumb'] .= "<li>Discussion</li>";
         $template->pageData['mainBody'] .= '<h5>'.$questionText.'</h5>';
-        $template->pageData['mainBody'] .= '<h2 class="page-section extra-bottom">Discuss<span class="hidden-xs"> This Question</span><a class="pull-right" href="vote.php?sessionID='.$thisSession->id.'&continue=1">Back<span class="hidden-xs"> to Questions</span></a></h2>';
+        $template->pageData['mainBody'] .= '<h2 class="page-section extra-bottom">Discuss<span class="hidden-xs"> This Question</span><a class="pull-right" href="viewQuestions.php?sessionID='.$thisSession->id.'">Back<span class="hidden-xs"> to Questions</span></a></h2>';
         $template->pageData['mainBody'] .= "<form id='add_questionChat' method='POST' class='form-horizontal'><div class='form-group'>";
-        $template->pageData['mainBody'] .= "<div class='col-sm-10 col-xs-9'><input type='hidden' name='questionID' value='{$thisQuestion->id}' />";
+        $template->pageData['mainBody'] .= "<div class='col-sm-12 col-xs-12'><input type='hidden' name='questionID' value='{$thisQuestion->id}' />";
         $template->pageData['mainBody'] .= "<input type='hidden' name='sessionID' value='{$thisSession->id}' />";
-        $template->pageData['mainBody'] .= "<textarea name='chatMessage' rows='3' class='form-control'></textarea></div>";
-        $template->pageData['mainBody'] .= "<div class='col-sm-2 col-xs-3'><input type='submit' name='submit' value='Send' class='btn btn-block btn-info submit'/></div>";
+        $template->pageData['mainBody'] .= "<textarea name='chatMessage' rows='3' class='form-control input-reply'></textarea>";
+        $template->pageData['mainBody'] .= "<input type='submit' name='submit' value='' class='btn btn-block btn-info submit-reply'/></div>";
         $template->pageData['mainBody'] .= "</div></form>";
         $template->pageData['mainBody'] .= "<div id='messages'></div></div>";
     }
@@ -113,7 +113,7 @@ else
 echo $template->render();
 function getAJAXScript($sessionID, $questionID)
 {
-    return getChatUpdateAJAXScript($questionID);
+    return getChatUpdateAJAXScript($questionID,$sessionID);
 }
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>

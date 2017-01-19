@@ -19,7 +19,7 @@ function displayNewQuestions($sessionId, $lastMsgID)
 {
     $uinfo = checkLoggedInUser();
     $loggedInUser = $uinfo['uname'];
-    $questions = studentsQuestion::retrieve_sessionNewQuestions($sessionId, $lastMsgID);
+    $questions = studentsQuestion::retrieve_sessionNewImpQuestions($sessionId, $lastMsgID);
     $out = "";
     if($questions) {
         for ($i = 0; $i < sizeof($questions); $i++) {

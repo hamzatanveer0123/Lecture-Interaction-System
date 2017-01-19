@@ -98,7 +98,8 @@ else
     }
     else
     {
-	    $template->pageData['mainBody'] = sessionCodeinput();
+    	//H2 update changing session input form to new form with target session_page.php
+	    $template->pageData['mainBody'] = sessionCodeinput("session_page.php");
 	    if($uinfo['sessionCreator'])
 	    {
 	        $template->pageData['mainBody'] .= "<div class='row'><div class='col-sm-8 col-sm-push-4'><a class='btn btn-primary' href='editsession.php'><i class='fa fa-plus-circle'></i> Create a new clicker session</a></div></div>";
@@ -145,7 +146,7 @@ else
 	        foreach($sessions as $s)
 	        {
 	            $ctime = strftime("%A %e %B %Y at %H:%M", $s->created);
-	            $template->pageData['mainBody'] .= "<li><a href='vote.php?sessionID={$s->id}'>{$s->title}</a> - <a href='addQuestion.php?sessionID={$s->id}'>Add Questions</a> - <a href='viewQuestions.php?sessionID={$s->id}'>View Questions</a>";
+	            $template->pageData['mainBody'] .= "<li>{$s->title} - <a href='vote.php?sessionID={$s->id}'>Vote</a> - <a href='viewQuestions.php?sessionID={$s->id}'>View Questions</a>";
                 if((isset($s->extras['allowFullReview']))&&($s->extras['allowFullReview']))
                      $template->pageData['mainBody'] .= " (<a href='review.php?sessionID={$s->id}'>Review previous answers</a>)";
                 $template->pageData['mainBody'] .= "</li>";

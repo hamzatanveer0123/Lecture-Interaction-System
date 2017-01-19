@@ -34,7 +34,7 @@ function UpdatePosts(id)
 }
 
 //H2 update
-function getChatUpdateAJAXScript($questionID)
+function getChatUpdateAJAXScript($questionID,$sessionID)
 {
     return "<script lang=\"JavaScript\">
 function httpGet(theUrl)
@@ -54,12 +54,12 @@ function httpGet(theUrl)
     return xmlHttp.responseText;
 }
 
-UpdatePosts({$questionID});
-window.setInterval(function(){UpdatePosts({$questionID})},500);
+UpdatePosts({$questionID},{$sessionID});
+window.setInterval(function(){UpdatePosts({$questionID},{$sessionID})},500);
 
-function UpdatePosts(id)
+function UpdatePosts(questionId,sessionId)
 {
-    var updateURL = 'getchat.php?questionID='+id+'&nocache='+new Date().getTime();
+    var updateURL = 'getchat.php?questionID='+questionId+'&sessionID='+sessionId+'&nocache='+new Date().getTime();
     var text = httpGet(updateURL);
     document.getElementById('messages').innerHTML = text;
 }

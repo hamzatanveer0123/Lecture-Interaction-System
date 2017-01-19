@@ -23,10 +23,35 @@ require_once('lib/database.php');
 require_once('lib/shared_funcs.php');
 $uinfo = checkLoggedInUser();
 
-$messages = chat_messages::retrieve_chat_messages_matching("question_id", $_REQUEST['questionID'], 0, -1, "id DESC");
+//H2 update to mark right answer
+$qId = $_REQUEST['questionID'];
+$sessionId = $_REQUEST['sessionID'];
+
+$session = session::retrieve_session($sessionId);
+
+$messages = chat_messages::retrieve_chat_messages_matching("question_id", $qId, 0, -1, "id DESC");
+
+$bestAnswer = studentsQuestion::getBestAnswer($qId);
+$bestAnswer = $bestAnswer[0];
+
+if($bestAnswer){
+    if($bestAnswer->student_id) {
+        $temp_user  = sessionMember::retrieve_sessionMember_matching("userID", $bestAnswer->student_id);
+        $user       = $temp_user[0];
+        $username   = $user->name;
+        $posted     = ago($bestAnswer->posted);
+    }
+    echo '<div class="info"><p class="bubble">'.$bestAnswer->message.'</p><p class="meta"><span class="username">'.$username.'</span><span class="time">'.$posted.'</span></p></div><br/>';
+}
 if($messages){
+    $bestAnswer = "";
+    $uinfo = checkLoggedInUser();
+
     foreach($messages as $m)
     {
+        if($uinfo['isAdmin']) {
+            $bestAnswer = "<button class=\"btn btn-primary btn-best-answer\" onclick=\"selectBestAsnwer($qId,$m->id)\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>";
+        }
         if($m->student_id > 0)
         {
             $temp_user = sessionMember::retrieve_sessionMember_matching("userID",$m->student_id);
@@ -34,11 +59,11 @@ if($messages){
             echo '<div class="comment';
             if($uinfo['uname'] == $user->userID)
                 echo ' me';
-            echo '"><p class="bubble">'.$m->message.'</p><p class="meta"><span class="username">'.$user->name.'</span><span class="time">'.ago($m->posted).'</span></p></div>';
+            echo '"><p class="bubble">'.$m->message . $bestAnswer .'</p><p class="meta"><span class="username">'.$user->name.'</span><span class="time">'.ago($m->posted).'</span></p></div>';
         }
         else
         {
-            echo '<div class="info"><p class="bubble">'.$m->message.'</p><p class="meta"><span class="username">General Information</span><span class="time">'.ago($m->posted).'</span></p></div>';
+            echo '<div class="info"><p class="bubble">'.$m->message. $bestAnswer .'</p><p class="meta"><span class="username">Anonymous</span><span class="time">'.ago($m->posted).'</span></p></div>';
         }
     }
 } else {

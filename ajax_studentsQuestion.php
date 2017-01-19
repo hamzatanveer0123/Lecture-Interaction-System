@@ -23,6 +23,7 @@ $students_question->student_id  = $student_id;
 $students_question->session_id  = $session_id;
 $students_question->question    = $question;
 $students_question->timeadded   = time();
+$students_question->answer_id   = 0;
 $students_question->viewed      = 0;
 $id = $students_question->insert();
 echo $id;

@@ -171,6 +171,18 @@ class yacrs_studentsQuestion{
    int needs_attention;
 }
 
+--new version---------------------
+class yacrs_studentsQuestion{
+   primary key int id;
+   string[35] student_id;
+   int session_id;
+   string[140] question;
+   datetime timeadded;
+   int answer_id;
+   boolean viewed;
+   int needs_attention;
+}
+----------------------------------
 class yacrs_chat_messages{
    primary key int id;
    int session_id;
@@ -224,7 +236,7 @@ function initializeDataBase_yacrs()
 	dataConnection::runQuery($query);
 
     //H2 update
-    $query = "CREATE TABLE yacrs_studentsQuestion(id INTEGER PRIMARY KEY AUTO_INCREMENT, student_id VARCHAR(35), session_id INTEGER, question VARCHAR(140), timeadded DATETIME, viewed INTEGER, needs_attention INTEGER);";
+    $query = "CREATE TABLE yacrs_studentsQuestion(id INTEGER PRIMARY KEY AUTO_INCREMENT, student_id VARCHAR(35), session_id INTEGER, question VARCHAR(140), timeadded DATETIME, answer_id INTEGER, viewed INTEGER, needs_attention INTEGER);";
     dataConnection::runQuery($query);
     $query = "CREATE TABLE yacrs_chat_messages(id INTEGER PRIMARY KEY AUTO_INCREMENT, session_id VARCHAR(35), question_id INTEGER, student_id INTEGER, message TEXT, posted DATE, viewed INTEGER);";
     dataConnection::runQuery($query);
@@ -2795,6 +2807,7 @@ class studentsQuestion
     var $session_id;
     var $question;
     var $timeadded;
+    var $answer_id;
     var $viewed;
     var $needs_attention;
 
@@ -2805,6 +2818,7 @@ class studentsQuestion
         $this->session_id = "0";
         $this->question = "";
         $this->timeadded = time();
+        $this->answer_id = "0";
         $this->viewed = false;
         $this->needs_attention = "0";
         if($asArray!==null)
@@ -2818,6 +2832,7 @@ class studentsQuestion
         $this->session_id = $asArray['session_id'];
         $this->question = $asArray['question'];
         $this->timeadded = dataConnection::db2time($asArray['timeadded']);
+        $this->answer_id = $asArray['answer_id'];
         $this->viewed = ($asArray['viewed']==0)?true:false;
         $this->needs_attention = $asArray['needs_attention'];
     }
@@ -2838,9 +2853,41 @@ class studentsQuestion
         return $question_array;
     }
 
+    static function retrieve_sessionImpQuestions($id)
+    {
+        $query = "SELECT * FROM yacrs_studentsQuestion WHERE session_id='".dataConnection::safe($id)."' AND needs_attention > 0 ORDER BY id ASC;";
+        $result = dataConnection::runQuery($query);
+        $question_array = [];
+
+        //if no result then return false
+        if(sizeof($result)==0) return false;
+
+        for ($i = 0; $i < sizeof($result); $i++) {
+            array_push($question_array, new studentsQuestion($result[$i]));
+        }
+
+        return $question_array;
+    }
+
     static function retrieve_sessionNewQuestions($id,$afterID)
     {
         $query = "SELECT * FROM yacrs_studentsQuestion WHERE session_id='".dataConnection::safe($id)."' AND id > '".dataConnection::safe($afterID)."' ORDER BY id ASC;";
+        $result = dataConnection::runQuery($query);
+        $question_array = [];
+
+        //if no result then return false
+        if(sizeof($result)==0) return false;
+
+        for ($i = 0; $i < sizeof($result); $i++) {
+            array_push($question_array, new studentsQuestion($result[$i]));
+        }
+
+        return $question_array;
+    }
+
+    static function retrieve_sessionNewImpQuestions($id,$afterID)
+    {
+        $query = "SELECT * FROM yacrs_studentsQuestion WHERE session_id='".dataConnection::safe($id)."' AND needs_attention > 0 ORDER BY id ASC;";
         $result = dataConnection::runQuery($query);
         $question_array = [];
 
@@ -2891,11 +2938,12 @@ class studentsQuestion
     function insert()
     {
         //#Any required insert methods for foreign keys need to be called here.
-        $query = "INSERT INTO yacrs_studentsQuestion(student_id, session_id, question, timeadded, viewed, needs_attention) VALUES(";
+        $query = "INSERT INTO yacrs_studentsQuestion(student_id, session_id, question, timeadded, answer_id, viewed, needs_attention) VALUES(";
         $query .= "'".dataConnection::safe($this->student_id)."', ";
         $query .= "'".dataConnection::safe($this->session_id)."', ";
         $query .= "'".dataConnection::safe($this->question)."', ";
         $query .= "'".dataConnection::time2db($this->timeadded)."', ";
+        $query .= "'".dataConnection::safe($this->answer_id)."', ";
         $query .= "'".(($this->viewed===false)?0:1)."', ";
         $query .= "'".dataConnection::safe($this->needs_attention)."');";
         dataConnection::runQuery("BEGIN;");
@@ -2913,6 +2961,7 @@ class studentsQuestion
         $query .= ", session_id='".dataConnection::safe($this->session_id)."' ";
         $query .= ", question='".dataConnection::safe($this->question)."' ";
         $query .= ", timeadded='".dataConnection::time2db($this->timeadded)."' ";
+        $query .= ", answer_id='".dataConnection::safe($this->answer_id)."' ";
         $query .= ", viewed='".(($this->viewed===false)?0:1)."' ";
         $query .= ", needs_attention='".dataConnection::safe($this->needs_attention)."' ";
         $query .= "WHERE id='".dataConnection::safe($this->id)."';";
@@ -2941,6 +2990,7 @@ class studentsQuestion
         $out .= '<session_id>'.htmlentities($this->session_id)."</session_id>\n";
         $out .= '<question>'.htmlentities($this->question)."</question>\n";
         $out .= '<timeadded>'.htmlentities($this->timeadded)."</timeadded>\n";
+        $out .= '<answer_id>'.htmlentities($this->answer_id)."</answer_id>\n";
         $out .= '<viewed>'.htmlentities($this->viewed)."</viewed>\n";
         $out .= '<needs_attention>'.htmlentities($this->needs_attention)."</needs_attention>\n";
         $out .= "</yacrs_studentsQuestion>\n";
@@ -2951,6 +3001,26 @@ class studentsQuestion
     function plusOneAttention($qId){
         $query = "UPDATE yacrs_studentsQuestion SET needs_attention = needs_attention + 1 WHERE id='".dataConnection::safe($qId)."';";
         return dataConnection::runQuery($query);
+    }
+
+    function minusOneAttention($qId){
+        $query = "UPDATE yacrs_studentsQuestion SET needs_attention = needs_attention - 1 WHERE id='".dataConnection::safe($qId)."';";
+        return dataConnection::runQuery($query);
+    }
+
+    function setBestAnswer($qID, $mID){
+        $query = "UPDATE yacrs_studentsQuestion SET answer_id='".dataConnection::safe($mID)."' WHERE id='".dataConnection::safe($qID)."';";
+        return dataConnection::runQuery($query);
+    }
+
+    function getBestAnswer($qID){
+        $query  = "SELECT answer_id FROM yacrs_studentsQuestion WHERE id='".dataConnection::safe($qID)."';";
+        $result = dataConnection::runQuery($query);
+        if($result){
+            $bestAnswer = chat_messages::retrieve_chat_messages_matching("id", $result[0]["answer_id"]);
+            return $bestAnswer;
+        }
+        return $result;
     }
 
     //[[USERCODE_yacrs_studentsQuestion]] WEnd of custom class members.
@@ -3220,6 +3290,20 @@ class question_liked
         else
             return false;
     }
+
+    static function removeLiked($qId,$sId)
+    {
+        $query = "DELETE FROM yacrs_question_liked WHERE question_id='".dataConnection::safe($qId)."' AND student_id='".dataConnection::safe($sId)."';";
+        $result = dataConnection::runQuery($query);
+        return $result;
+    }
+
+    function getLastLikeID($sessionID, $afterID){
+        $query = "SELECT MAX(id) FROM yacrs_question_liked WHERE session_id='".dataConnection::safe($sessionID)."'  AND id > ".dataConnection::safe($afterID);
+        $result = dataConnection::runQuery($query);
+        return $result;
+    }
+
 
     //[[USERCODE_yacrs_question_liked]] WEnd of custom class members.
 }
