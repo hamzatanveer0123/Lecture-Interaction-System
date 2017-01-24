@@ -374,7 +374,7 @@ abstract class nbform
         $out .= '<div class="col-sm-12">';
         if((is_array($validateMsgs))&&(array_key_exists($name, $validateMsgs)))
             $out .= "<div class=\"alert alert-error\">{$validateMsgs[$name]}</div>";
-        $out .= "<textarea name=\"$name\" class=\"form-control $class\" placeholder=\"Please add question here...\" rows=\"$height\"";
+        $out .= "<textarea name=\"$name\" class=\"form-control $class\" maxlength='240' placeholder=\"Please add question here...\" rows=\"$height\"";
         if((isset($this->disabled[$name]))&&($this->disabled[$name]))
             $out .= ' disabled="disabled" ';
         $out .= ">";

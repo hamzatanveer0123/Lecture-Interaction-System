@@ -8,6 +8,7 @@ require_once('config.php');
 require_once('lib/database.php');
 require_once('lib/forms.php');
 include_once('corelib/mobile.php');
+require_once('lib/shared_funcs.php');
 
 $template = new templateMerge($TEMPLATE);
 
@@ -48,8 +49,7 @@ else
     {
         if(isset($_REQUEST['sessionID']))
             $sessionId = intval($_REQUEST['sessionID']);
-        $template->pageData['mainBody'] .= loadingScreen();
-        $template->pageData['mainBody'] .= addSortButton();
+//        $template->pageData['mainBody'] .= addSortButton();
         $template->pageData['mainBody'] .= addToggleButton();
         $template->pageData['mainBody'] .= displayQuestions($sessionId);
 //        $template->pageData['mainBody'] .= addQuestion($sessionId);
@@ -69,13 +69,8 @@ function displayQuestions($sessionId)
     global $uinfo;
 
     $loggedInUser = $uinfo['uname'];
-
-    $lastLikeID = question_liked::getLastLikeID($sessionId,0);
-
-    $out = "<input type='hidden' class='last-liked-id' value='$lastLikeID'/>";
-
-    $questions = studentsQuestion::retrieve_sessionImpQuestions($sessionId);
-    $out .= "<div class='message-container'>";
+    $questions = studentsQuestion::retrieve_sessionQuestions($sessionId);
+    $out = "<div class='message-container'>";
 
     for ($i = 0; $i < sizeof($questions); $i++) {
 
@@ -84,6 +79,7 @@ function displayQuestions($sessionId)
         $needsAttention = $questions[$i]->needs_attention;
         $studentId      = $questions[$i]->student_id;
         $questionText   = $questions[$i]->question;
+        $timeadded      = $questions[$i]->timeadded;
 
         if($question) {
 
@@ -95,26 +91,28 @@ function displayQuestions($sessionId)
                 $fontSize = $fontSize . "px";
             }
 
+            $timeAdded     = dataConnection::time2db($timeadded);
+            if($timeAdded){
+                $timeNow = dataConnection::time2db(time());
+
+                $date1Timestamp = strtotime($timeAdded);
+                $date2Timestamp = strtotime($timeNow);
+
+                //find difference between two times
+                $difference = round(abs($date1Timestamp - $date2Timestamp));
+            }
+
+            $JUMP   = 2;
+            $bottom = "bottom: ".($difference*1);
+
             $ifActive       = ifActive($question);
             $beingDiscussed = ifBeingDiscussed($question);
 
-            $liked = question_liked::checkIfLiked($qId, $loggedInUser);
-
-            //to get new questions after the ID
-            $hiddenQiD = "<input type='hidden' class='lastMsgID' value='$qId'>";
-
-            $buttons = "<a class='card-buttons comments' href='ask_question_chat.php?quId=$qId&sessionID=$sessionId'>
-                            <i class='fa fa-comments-o' aria-hidden='true'></i> discuss
-                        </a>";
-
-            if ($liked) {
-                $buttons .= "<span style='color: #197fcd; font-weight: 800;' class='card-buttons badge-question-$qId' onclick='plusplusLike($sessionId,$qId,0)'>
-                                <i class='fa fa-exclamation' aria-hidden='true'></i> important
-                              </span>";
-            } else {
-                $buttons .= "<span class='card-buttons badge-question-$qId' onclick='plusplusLike($sessionId,$qId,1)'>
-                                <i class='fa fa-exclamation' aria-hidden='true'></i> important
-                              </span>";
+            $uinfo = checkLoggedInUser();
+            if($uinfo['isAdmin']) {
+                $pin = "<span onclick='pinQuestion($qId,$sessionId,this)' class='bubble-for-badge badge-discussion-$qId' style='float: left; right: auto'>
+                            <img class='card-badge' src='html/icons/icon-pin.png'/>
+                        </span>";
             }
 
             $showBadge = "<span class='bubble-for-badge badge-discussion-$qId'>
@@ -125,42 +123,58 @@ function displayQuestions($sessionId)
                             <img class='card-badge' src='html/icons/badge-discussion.png'/>
                           </span>";
 
+            if($i % 2 == 0){
+                $pos    = "right";
+                $float  = "float: right !important;";
+                $badgeSide = "right: -10px !important";
+                $arrow = "<div class='arrow-right'></div>";
+                $clear = "";
+            } else {
+                $pos    = "left";
+                $float  = "float: left !important;";
+                $badgeSide = "left: -16px !important; right: auto !important";
+                $arrow = "<div class='arrow-left'></div>";
+                $clear = "<div style='clear:both'></div>";
+            }
+
+            //to get new questions after the ID
+            $hiddenQiD = "<input type='hidden' class='lastMsgID' style='float: $pos' value='$qId'>";
+
             //check if there is any reaction on question
             if ($ifActive || $beingDiscussed) {
                 $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-                $out .= "<div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention'>
+                $out .= "<div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention' style='$float $bottom'>
                             <div class='question-content'>
                                 $hiddenQiD
                                 <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
-                                <hr/>
                                 <div style='display: flex; text-align: center; color: #888'>
                                 $badge
-                                <span class='bubble-for-badge button-close badge-close-$qId' style='display: none'>
+                                $pin
+                                <span class='bubble-for-badge button-close badge-close-$qId' style='display: none; $badgeSide'>
                                     <img class='card-badge' src='html/icons/icon-close.png'/>
                                 </span>
-                                $buttons
                                 </div>
+                                $arrow
                             </div>
-                         </div>";
+                         </div>$clear";
             } else {
                 $hide  = "hide-card-details";
                 $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-                $out .= "<div class='col-sm-12 ask-question question-$qId hide-unImpQuestion' data-attention='$needsAttention'>
+                $out .= "<div class='col-sm-12 ask-question question-$qId hide-unImpQuestion' data-attention='$needsAttention' style='$float $bottom'>
                             <div class='question-content $hide'>
                                 $hiddenQiD
                                 <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
-                                <hr/>
                                 <div style='display: flex; text-align: center; color: #888'>
                                 $badge
-                                <span class='bubble-for-badge button-close badge-close-$qId' onclick='closeQuestionCard($qId)'>
+                                <span class='bubble-for-badge button-close badge-close-$qId' onclick='closeQuestionCard($qId)' style='$badgeSide'>
                                     <img class='card-badge' src='html/icons/icon-close.png'/>
                                 </span>
-                                $buttons
                                 </div>
+                                $arrow
                             </div>
-                         </div>";
+                         </div>$clear";
             }
-        } else { $out .= "<div class='col-sm-12 ask-question'><p>no new questions</p></div>"; }
+        } else { $out .= "<div class='col-sm-12 ask-question no-question'><p>no new questions ...</p></div>"; }
     }
     $out .= "</div>";
     return $out;
@@ -221,7 +235,7 @@ function ifActive($q){
 
         //find difference between two times
         $difference = round(abs($date1Timestamp - $date2Timestamp) / 60,2);
-        if($difference < 60*2) return true;
+        if($difference < 60*100) return true;
     }
     return false;
 }
@@ -264,17 +278,10 @@ function ifBeingDiscussed($q){
     }
 }
 
-function loadingScreen(){
-    $out = "<div class='loading-screen' style='color: #197fcd; text-align: center; margin-top: 25%'>
-            <i class='fa fa-circle-o-notch fa-spin fa-5x fa-fw'></i>
-            <span class='sr-only'>Loading...</span>
-            </div>";
-    return $out;
-}
 
 function addToggleButton(){
     $out = "<span class='bubble-for-badge badge-toggle' style='cursor: pointer'>
-            <i class='fa fa-eye fa-2x' aria-hidden='true' style='color: #ececec'></i>
+            <i class='fa fa-pause' aria-hidden='true' style='color: #ececec'></i>
             </span>";
     return $out;
 }
@@ -295,11 +302,22 @@ function addSortButton(){
 <script>
     setInterval("updateQuestions()",1000);
     function updateQuestions() {
-        var lastLikeID = $(".last-liked-id").val();
+        var lastMsgVal = 0;
+        var position        = "";
+        //improve this
+        var divList    = $(".lastMsgId");
+        divList.sort(function(a, b){
+            return parseInt(a.value) > parseInt(b.value) ? 1 : -1;
+        });
+        var lastIdInput = divList.last()[0];
+        if(lastIdInput != null){
+            lastMsgVal  = lastIdInput.value;
+            position    = $(lastIdInput).css("float");
+        }
         $.ajax({
-            url: 'ajax_new_imp_questions.php?sID=<?php echo $sessionId; ?>&mID=' + lastLikeID,
-            success: function (html) {
-                if (html.indexOf("ask-question") >= 0) {
+            url: 'ajax_new_presentation_questions.php?sID=<?php echo $sessionId; ?>&mID='+lastMsgVal+'&pos='+position,
+            success: function(html) {
+                if (html.indexOf("ask-question") >= 0){
                     $(".message-container").append(html);
                 }
             }

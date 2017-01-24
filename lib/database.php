@@ -167,22 +167,12 @@ class yacrs_studentsQuestion{
    int session_id;
    string[140] question;
    datetime timeadded;
+   int answer_id;
    boolean viewed;
+   int pin_location;
    int needs_attention;
 }
 
---new version---------------------
-class yacrs_studentsQuestion{
-   primary key int id;
-   string[35] student_id;
-   int session_id;
-   string[140] question;
-   datetime timeadded;
-   int answer_id;
-   boolean viewed;
-   int needs_attention;
-}
-----------------------------------
 class yacrs_chat_messages{
    primary key int id;
    int session_id;
@@ -199,6 +189,17 @@ class yacrs_question_liked{
    int question_id;
    string[35] student_id;
    boolean liked;
+   datetime posted;
+}
+
+
+
+//H2 update check if needed
+class yacrs_question_pin{
+   primary key int id;
+   int session_id;
+   int question_id;
+   int position;
    datetime posted;
 }
 
@@ -236,7 +237,7 @@ function initializeDataBase_yacrs()
 	dataConnection::runQuery($query);
 
     //H2 update
-    $query = "CREATE TABLE yacrs_studentsQuestion(id INTEGER PRIMARY KEY AUTO_INCREMENT, student_id VARCHAR(35), session_id INTEGER, question VARCHAR(140), timeadded DATETIME, answer_id INTEGER, viewed INTEGER, needs_attention INTEGER);";
+    $query = "CREATE TABLE yacrs_studentsQuestion(id INTEGER PRIMARY KEY AUTO_INCREMENT, student_id VARCHAR(35), session_id INTEGER, question VARCHAR(140), timeadded DATETIME, answer_id INTEGER, viewed INTEGER, pin_location INTEGER, needs_attention INTEGER);";
     dataConnection::runQuery($query);
     $query = "CREATE TABLE yacrs_chat_messages(id INTEGER PRIMARY KEY AUTO_INCREMENT, session_id VARCHAR(35), question_id INTEGER, student_id INTEGER, message TEXT, posted DATE, viewed INTEGER);";
     dataConnection::runQuery($query);
@@ -2809,6 +2810,7 @@ class studentsQuestion
     var $timeadded;
     var $answer_id;
     var $viewed;
+    var $pin_location;
     var $needs_attention;
 
     function studentsQuestion($asArray=null)
@@ -2820,6 +2822,7 @@ class studentsQuestion
         $this->timeadded = time();
         $this->answer_id = "0";
         $this->viewed = false;
+        $this->pin_location = "0";
         $this->needs_attention = "0";
         if($asArray!==null)
             $this->fromArray($asArray);
@@ -2834,28 +2837,13 @@ class studentsQuestion
         $this->timeadded = dataConnection::db2time($asArray['timeadded']);
         $this->answer_id = $asArray['answer_id'];
         $this->viewed = ($asArray['viewed']==0)?true:false;
+        $this->pin_location = $asArray['pin_location'];
         $this->needs_attention = $asArray['needs_attention'];
     }
 
     static function retrieve_sessionQuestions($id)
     {
         $query = "SELECT * FROM yacrs_studentsQuestion WHERE session_id='".dataConnection::safe($id)."' ORDER BY id ASC;";
-        $result = dataConnection::runQuery($query);
-        $question_array = [];
-
-        //if no result then return false
-        if(sizeof($result)==0) return false;
-
-        for ($i = 0; $i < sizeof($result); $i++) {
-            array_push($question_array, new studentsQuestion($result[$i]));
-        }
-
-        return $question_array;
-    }
-
-    static function retrieve_sessionImpQuestions($id)
-    {
-        $query = "SELECT * FROM yacrs_studentsQuestion WHERE session_id='".dataConnection::safe($id)."' AND needs_attention > 0 ORDER BY id ASC;";
         $result = dataConnection::runQuery($query);
         $question_array = [];
 
@@ -2885,29 +2873,13 @@ class studentsQuestion
         return $question_array;
     }
 
-    static function retrieve_sessionNewImpQuestions($id,$afterID)
-    {
-        $query = "SELECT * FROM yacrs_studentsQuestion WHERE session_id='".dataConnection::safe($id)."' AND needs_attention > 0 ORDER BY id ASC;";
-        $result = dataConnection::runQuery($query);
-        $question_array = [];
-
-        //if no result then return false
-        if(sizeof($result)==0) return false;
-
-        for ($i = 0; $i < sizeof($result); $i++) {
-            array_push($question_array, new studentsQuestion($result[$i]));
-        }
-
-        return $question_array;
-    }
-
     static function retrieve_studentQuestion($id)
     {
         $query = "SELECT * FROM yacrs_studentsQuestion WHERE id='".dataConnection::safe($id)."';";
         $result = dataConnection::runQuery($query);
         if(sizeof($result)!=0)
         {
-            return new studentsQuestion($result[0]);
+            return new yacrs_studentsQuestion($result[0]);
         }
         else
             return false;
@@ -2938,13 +2910,14 @@ class studentsQuestion
     function insert()
     {
         //#Any required insert methods for foreign keys need to be called here.
-        $query = "INSERT INTO yacrs_studentsQuestion(student_id, session_id, question, timeadded, answer_id, viewed, needs_attention) VALUES(";
+        $query = "INSERT INTO yacrs_studentsQuestion(student_id, session_id, question, timeadded, answer_id, viewed, pin_location, needs_attention) VALUES(";
         $query .= "'".dataConnection::safe($this->student_id)."', ";
         $query .= "'".dataConnection::safe($this->session_id)."', ";
         $query .= "'".dataConnection::safe($this->question)."', ";
         $query .= "'".dataConnection::time2db($this->timeadded)."', ";
         $query .= "'".dataConnection::safe($this->answer_id)."', ";
         $query .= "'".(($this->viewed===false)?0:1)."', ";
+        $query .= "'".dataConnection::safe($this->pin_location)."', ";
         $query .= "'".dataConnection::safe($this->needs_attention)."');";
         dataConnection::runQuery("BEGIN;");
         $result = dataConnection::runQuery($query);
@@ -2963,6 +2936,7 @@ class studentsQuestion
         $query .= ", timeadded='".dataConnection::time2db($this->timeadded)."' ";
         $query .= ", answer_id='".dataConnection::safe($this->answer_id)."' ";
         $query .= ", viewed='".(($this->viewed===false)?0:1)."' ";
+        $query .= ", pin_location='".dataConnection::safe($this->pin_location)."' ";
         $query .= ", needs_attention='".dataConnection::safe($this->needs_attention)."' ";
         $query .= "WHERE id='".dataConnection::safe($this->id)."';";
         return dataConnection::runQuery($query);
@@ -2992,6 +2966,7 @@ class studentsQuestion
         $out .= '<timeadded>'.htmlentities($this->timeadded)."</timeadded>\n";
         $out .= '<answer_id>'.htmlentities($this->answer_id)."</answer_id>\n";
         $out .= '<viewed>'.htmlentities($this->viewed)."</viewed>\n";
+        $out .= '<pin_location>'.htmlentities($this->pin_location)."</pin_location>\n";
         $out .= '<needs_attention>'.htmlentities($this->needs_attention)."</needs_attention>\n";
         $out .= "</yacrs_studentsQuestion>\n";
         return $out;

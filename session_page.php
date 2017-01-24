@@ -104,11 +104,11 @@ function addButtons($session){
     $out = "<h1>Current Session $sessionName<h1/><br/>
             <div class='row'>
                 <div class='col-lg-12' style='text-align: center; font-size: 16px'>
-                    <a class='btn-session' href='vote.php?sessionID=$sessionId'>
+                    <a class='btn btn-primary btn-lg' href='vote.php?sessionID=$sessionId'>
                         <i class='fa fa-bar-chart fa-2x' style='vertical-align: -3px;' aria-hidden='true'></i>
                         Vote
                     </a>
-                    <a class='btn-session' href='viewQuestions.php?sessionID=$sessionId'>
+                    <a class='btn btn-primary btn-lg' href='viewQuestions.php?sessionID=$sessionId'>
                         <i class='fa fa-comments fa-2x' style='vertical-align: -3px;' aria-hidden='true'></i>
                         Ask!
                     </a>

@@ -10,6 +10,6 @@ require_once('lib/database.php');
 initializeDataBase_();
 function initializeDataBase_()
 {
-    $query = "CREATE TABLE yacrs_question_liked(id INTEGER PRIMARY KEY AUTO_INCREMENT, session_id INTEGER, question_id INTEGER, student_id VARCHAR(35), liked INTEGER, posted DATETIME);";
+    $query = "CREATE TABLE yacrs_studentsQuestion(id INTEGER PRIMARY KEY AUTO_INCREMENT, student_id VARCHAR(35), session_id INTEGER, question VARCHAR(140), timeadded DATETIME, answer_id INTEGER, viewed INTEGER, pin_location INTEGER, needs_attention INTEGER);";
     dataConnection::runQuery($query);
 }

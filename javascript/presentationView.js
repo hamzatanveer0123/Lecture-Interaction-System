@@ -2,12 +2,32 @@
  * Created by Hamza Tanveer on 05/12/2016.
  */
 
+var timelineInterval;
+
 $( document ).ready(function() {
 
-    loadPage();
     setListener();
+    startTimelineInterval();
 
 });
+
+function startTimelineInterval() {
+    timelineInterval = setInterval("timeline()",1000);
+    $(".message-container").removeClass("make-scrollable");
+    $(".ask-question").removeClass("bottom");
+
+}
+
+function stopTimelineInterval() {
+    clearInterval(timelineInterval);
+    $(".message-container").addClass("make-scrollable");
+    $(".ask-question").addClass("bottom");
+
+    //animate to bottom
+    $(".message-container").animate({
+        scrollTop: $(".message-container")[0].scrollHeight
+    }, 2000);
+}
 
 $('#add_studentsQuestion').on('submit', function (e) {
     e.preventDefault();
@@ -33,12 +53,18 @@ $('#add_studentsQuestion').on('submit', function (e) {
 $(".badge-toggle").click(function (e) {
     iconClass = $(".badge-toggle").find("i")[0];
     var className = $(iconClass).attr("class");
-    if(className.indexOf("slash") < 0){
-        $(iconClass).attr("class","fa fa-eye-slash fa-2x");
+    if(className.indexOf("pause") < 0){
+        $(iconClass).attr("class","fa fa-pause");
         $(".ask-question").click();
     } else {
-        $(iconClass).attr("class","fa fa-eye fa-2x ");
+        $(iconClass).attr("class","fa fa-play");
         $(".button-close").click();
+    }
+
+    if(!$(".ask-question").hasClass("bottom")){
+        stopTimelineInterval();
+    } else {
+        startTimelineInterval();
     }
 });
 
@@ -53,21 +79,6 @@ function sort() {
     });
     $(".message-container").html(divList);
     setListener();
-}
-
-function loadPage() {
-    setTimeout(function() {
-        $(".loading-screen").hide();
-    }, 1000);
-    setTimeout(function() {
-        $(".message-container").css('visibility', 'visible');
-        $(".form-container").css('visibility', 'visible');
-        //if overflow scroll to the bottom
-        $(".message-container").scrollTop($(".message-container")[0].scrollHeight);
-        // $(".message-container").animate({ scrollTop: $(".message-container").prop("scrollHeight")}, "slow");
-        // $(".message-container").animate({ scrollTop: $(".message-container").height() }, "slow");
-    }, 1000);
-
 }
 
 function closeQuestionCard(qId) {
@@ -131,8 +142,75 @@ function setListener() {
 
         //toggle to open and close card
         $(this).removeClass("hide-unImpQuestion");
-
+        checkOverflow();
     });
 
 }
+
+function pinQuestion(qID, sessionId, thisPin) {
+    console.log(qID);
+    console.log(sessionId);
+    console.log(thisPin);
+
+    var bottom = $(".question-"+qID).css("bottom");
+    $(".question-"+qID).css("bottom", bottom + " !important");
+}
+
+
+function timeline() {
+
+    // Archived
+    //to scroll to divs bottom
+    // $(".message-container").animate({
+    //     scrollTop: $(".message-container")[0].scrollHeight
+    // }, 1000);
+
+    var divs = $(".ask-question");
+
+    for(var i=0; i < divs.length; i++){
+        var thisDiv = $(divs[i]);
+        var bottomValue = $(thisDiv).css("bottom");
+        if(bottomValue == "auto"){
+            var  bottom = 0;
+        } else {
+            var bottom = bottomValue.split("px")[0];
+        }
+        $(thisDiv).css("bottom",(parseInt(bottom)+10)+"px");
+    }
+}
+
+//
+// Archived
+//
+// function checkOverflow() {
+//
+//     to have scrolling
+//     $(".message-container").addClass("make-scrollable");
+//     $(".message-container").scrollTop($(".message-container")[0].scrollHeight);
+//
+//
+//     this is to set auto shrink
+//     if ($('.message-container')[0].scrollHeight >  $('.message-container').height()) {
+//
+//         var overflown  =  $('.message-container')[0].scrollHeight;
+//         var visibleHeight =  $('body').height();
+//         var difference = overflown -  visibleHeight;
+//
+//         if(difference > 1){
+//             var fontSize  = $(".ask-question p").css("font-size");
+//             var fontValue = parseInt(fontSize.split("px")[0]);
+//
+//             var zoom = $(".ask-question").css("zoom");
+//             $(".ask-question").css("zoom",zoom-0.05);
+//             // $(".ask-question").css("-moz-transform","scale("+(zoom-0.05)+","+(zoom-0.05)+");");
+//
+//
+//
+//             // if(fontValue > 8) {
+//             //     $(".ask-question p").css("font-size", fontValue - 1 + "px");
+//             // }
+//
+//        }
+//     }
+// }
 

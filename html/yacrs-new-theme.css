@@ -41,7 +41,7 @@ hr{
     bottom: 17%;
     padding: 10px 25%;
     max-height: 80%;
-    overflow: scroll;
+    overflow-y: scroll;
     visibility: hidden;
 }
 
@@ -197,16 +197,6 @@ hr{
     top: 80px;
     padding: 10px;
     background: #fff;
-}
-
-.btn-session{
-    text-align: center;
-    font-size: 20px;
-    border: 1px solid #ccc;
-    margin-left: 30%;
-    margin-right: 30%;
-    padding: 20px;
-    margin-bottom: 25px;
 }
 
 /* Overrides for Bootstrap's mobile theme */

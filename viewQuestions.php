@@ -65,6 +65,7 @@ echo $template->render();
 
 function displayQuestions($sessionId)
 {
+    $data['questionResponseInfo']['studentQuInfo'] = studentsQuestion::count("session_id",$sessionId);
 
     global $uinfo;
 
@@ -79,6 +80,7 @@ function displayQuestions($sessionId)
         $needsAttention = $questions[$i]->needs_attention;
         $studentId      = $questions[$i]->student_id;
         $questionText   = $questions[$i]->question;
+
 
         if($question) {
 
@@ -188,6 +190,7 @@ function addQuestion($sessionId)
     $questionForm -> setData($data);
     $out = "<div class='form-container'>";
     $out .= $questionForm->getHtml();
+    $out .= "<p style='color: grey;'><span id='chars'>240</span> characters remaining</p>";
     $out .= "</div>";
 
     $out .= "";
@@ -294,7 +297,7 @@ function addSortButton(){
         //improve this
         var divList    = $(".lastMsgId");
         divList.sort(function(a, b){
-            return a.value > b.value ? 1 : -1;
+            return parseInt(a.value) > parseInt(b.value) ? 1 : -1;
         });
         var lastIdInput = divList.last()[0];
         if(lastIdInput != null){

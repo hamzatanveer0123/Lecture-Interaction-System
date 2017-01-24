@@ -7,6 +7,12 @@ $( document ).ready(function() {
     loadPage();
     setListener();
 
+    var maxLength = 240;
+    $('.ask-question-textarea').keyup(function() {
+        var length = $(this).val().length;
+        var length = maxLength-length;
+        $('#chars').text(length);
+    });
 });
 
 $('#add_studentsQuestion').on('submit', function (e) {
