@@ -2879,7 +2879,7 @@ class studentsQuestion
         $result = dataConnection::runQuery($query);
         if(sizeof($result)!=0)
         {
-            return new yacrs_studentsQuestion($result[0]);
+            return new studentsQuestion($result[0]);
         }
         else
             return false;
@@ -2996,6 +2996,11 @@ class studentsQuestion
             return $bestAnswer;
         }
         return $result;
+    }
+
+    function setQuestionPoistion($question_id, $position){
+        $query = "UPDATE yacrs_studentsQuestion SET pin_location='".dataConnection::safe($position)."' WHERE id='".dataConnection::safe($question_id)."';";
+        return dataConnection::runQuery($query);
     }
 
     //[[USERCODE_yacrs_studentsQuestion]] WEnd of custom class members.

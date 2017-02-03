@@ -39,6 +39,25 @@ hr{
     margin-bottom: 10px !important;
 }
 
+
+.pin-container{
+    background: #f5f5f5;
+    position: absolute;
+    height: 100%;
+    width: 40%;
+    left: -40%;
+    z-index: 9999;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    -webkit-box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.5);
+    box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.5);
+}
+
+.inPinnedContainer{
+    bottom: auto !important;
+    width: 94% !important;
+}
+
 .message-container{
     width: 100%;
     left: 0;
@@ -46,7 +65,7 @@ hr{
     min-height: 0%;
     position: absolute;
     bottom: 0px;
-    background: red;
+    /*background: red;*/
 }
 
 
@@ -111,9 +130,9 @@ hr{
     /*margin: 15px;*/
     border: 1px solid #fafafa;
     border-radius: 3px;
-    -webkit-box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow:    0px 3px 3px 0px rgba(0, 0, 0, 0.3);
-    box-shadow:         0px 3px 3px 0px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow:    0px 5px 8px 0px rgba(0, 0, 0, 0.3);
+    box-shadow:         0px 5px 8px 0px rgba(0, 0, 0, 0.3);
     /*box-shadow: 0 4px 0 #90A4AE;*/
     /*box-shadow: 0 4px 0 #1DE9B6;*/
     /*animation look*/
@@ -132,9 +151,26 @@ hr{
     margin-top: 15px
 }
 
+.pin-container-question{
+    width: 96% !important;
+    background: white;
+    color: #3c3c3c;
+    padding: 10px !important;
+    border: 1px solid #fafafa;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow:    0px 5px 8px 0px rgba(0, 0, 0, 0.3);
+    box-shadow:         0px 5px 8px 0px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    cursor: pointer;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 15px
+}
+
 .ask-question:hover{
-    z-index: 999;
-    transform:  scale(1.15,1.15);
+    /*z-index: 999;*/
+    /*transform:  scale(1.15,1.15);*/
     /*box-shadow: 0 4px 0 #90A4AE;*/
     /*box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3);*/
     -webkit-box-shadow: 0 10px 12px rgba(0, 0, 0, 0.3);
@@ -148,8 +184,21 @@ hr{
     text-decoration: none;
 }
 
-.ask-question:hover p{
-    /*font-size: 16px !important;*/
+.ask-question .pin{
+    display: none;
+}
+
+.ask-question:hover .pin{
+    display: block;
+}
+
+.question-link{
+    color: #3e3e3e;
+    text-decoration: none;
+}
+
+.question-link:hover{
+    text-decoration: none;
 }
 
 .arrow-right{
@@ -197,9 +246,9 @@ hr{
     border-radius: 100px;
     padding: 5px;
     z-index: 999;
-    -webkit-box-shadow: 0px 3px 3px 0px rgba(124, 124, 124, 0.5);
-    -moz-box-shadow:    0px 3px 3px 0px rgba(124, 124, 124, 0.5);
-    box-shadow:         0px 3px 3px 0px rgba(124, 124, 124, 0.5);
+    -webkit-box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow:    0px 3px 3px 0px rgba(0, 0, 0, 0.3);
+    box-shadow:         0px 3px 3px 0px rgba(0, 0, 0, 0.3);
 }
 
 .card-badge{
@@ -280,6 +329,19 @@ hr{
     height: 100%;
 }
 
+.pinned{
+    -webkit-box-shadow: inset 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow:    inset 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
+    box-shadow:         inset 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
+}
+
+.pinned:hover{
+    transform: scale(1,1);
+    -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow:    0px 0px 0px 0px rgba(0, 0, 0, 0.3);
+    box-shadow:         0px 0px 0px 0px rgba(0, 0, 0, 0.3);
+}
+
 /* Overrides for Bootstrap's mobile theme */
 
 @media (min-width: 768px) {
@@ -310,4 +372,83 @@ hr{
         /*margin: 0 auto 12px;*/
     }
 
+}
+
+/**********************************/
+/*PULSE ANIMATION FOR FONT AWESOME*/
+/**********************************/
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    50% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    100% {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    50% {
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+    }
+
+    100% {
+        -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+}
+
+.faa-pulse.animated,
+.faa-pulse.animated-hover:hover,
+.faa-parent.animated-hover:hover > .faa-pulse {
+    -webkit-animation: pulse 2s linear infinite;
+    animation: pulse 2s linear infinite;
+}
+
+/* SHAKE */
+
+.faa-shake.animated,
+.faa-shake.animated-hover:hover,
+.faa-parent.animated-hover:hover > .faa-shake {
+    -webkit-animation: wrench 2.5s ease infinite;
+    animation: wrench 2.5s ease infinite;
+}
+
+/*For Tooltip*/
+
+/* Tooltip text */
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #373737;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+    margin-left:20px
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.badge-pin-container:hover .tooltiptext {
+    visibility: visible;
 }

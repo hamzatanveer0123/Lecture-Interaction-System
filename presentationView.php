@@ -51,6 +51,8 @@ else
             $sessionId = intval($_REQUEST['sessionID']);
 //        $template->pageData['mainBody'] .= addSortButton();
         $template->pageData['mainBody'] .= addToggleButton();
+        $template->pageData['mainBody'] .= addOpenPinButton();
+        $template->pageData['mainBody'] .= pinContainer($sessionId);
         $template->pageData['mainBody'] .= displayQuestions($sessionId);
 //        $template->pageData['mainBody'] .= addQuestion($sessionId);
 
@@ -79,14 +81,17 @@ function displayQuestions($sessionId)
         $needsAttention = $questions[$i]->needs_attention;
         $studentId      = $questions[$i]->student_id;
         $questionText   = $questions[$i]->question;
+        $pinLocation    = $questions[$i]->pin_location;
         $timeadded      = $questions[$i]->timeadded;
 
         if($question) {
 
+            //TODO: keep track of number of characters as well.
+            //if more characters than keep font size proportional.
             $fontSize = (13 + ($needsAttention / 0.5));
 
-            if ($fontSize > 40) {
-                $fontSize = "40px";
+            if ($fontSize > 20) {
+                $fontSize = "20px";
             } else {
                 $fontSize = $fontSize . "px";
             }
@@ -102,26 +107,18 @@ function displayQuestions($sessionId)
                 $difference = round(abs($date1Timestamp - $date2Timestamp));
             }
 
-            $JUMP   = 2;
-            $bottom = "bottom: ".($difference*1);
+            $JUMP   = 1;
+            $bottom = "bottom: ".($difference*$JUMP)."px";
 
-            $ifActive       = ifActive($question);
-            $beingDiscussed = ifBeingDiscussed($question);
-
-            $uinfo = checkLoggedInUser();
-            if($uinfo['isAdmin']) {
-                $pin = "<span onclick='pinQuestion($qId,$sessionId,this)' class='bubble-for-badge badge-discussion-$qId' style='float: left; right: auto'>
-                            <img class='card-badge' src='html/icons/icon-pin.png'/>
-                        </span>";
+            $pinClass = "";
+            $pinned = 0;
+            if(intval($pinLocation) > 0){
+                $pinClass = "pinned";
+                $bottom = "bottom: ".$pinLocation."px";
+                $pinned = 1;
             }
 
-            $showBadge = "<span class='bubble-for-badge badge-discussion-$qId'>
-                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
-                          </span>";
-
-            $hideBadge = "<span class='bubble-for-badge badge-discussion-$qId' style='display: none'>
-                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
-                          </span>";
+            $uinfo = checkLoggedInUser();
 
             if($i % 2 == 0){
                 $pos    = "right";
@@ -129,54 +126,72 @@ function displayQuestions($sessionId)
                 $badgeSide = "right: -10px !important";
                 $arrow = "<div class='arrow-right'></div>";
                 $clear = "";
+                if(true) {
+                    $pin = "<span onclick='pinQuestion($qId, this, $pinned, $sessionId)' class='bubble-for-badge pin' style='left: -10px !important; right: auto !important; background-color: #009688;'>
+                            <img class='card-badge' src='html/icons/icon-pin-right.png'/>
+                        </span>";
+                }
             } else {
                 $pos    = "left";
                 $float  = "float: left !important;";
                 $badgeSide = "left: -16px !important; right: auto !important";
                 $arrow = "<div class='arrow-left'></div>";
                 $clear = "<div style='clear:both'></div>";
+                if(true) {
+                    $pin = "<span onclick='pinQuestion($qId, this, $pinned, $sessionId)' class='bubble-for-badge pin' style='background-color: #009688;'>
+                            <img class='card-badge' src='html/icons/icon-pin-left.png'/>
+                        </span>";
+                }
             }
+
+            $beingDiscussed = ifBeingDiscussed($question);
+
+            $showBadge = "<span class='bubble-for-badge badge-discussion-$qId faa-pulse animated' style='$badgeSide'>
+                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
+                          </span>";
+
+            $hideBadge = "<span class='bubble-for-badge badge-discussion-$qId faa-pulse animated' style='display: none; $badgeSide'>
+                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
+                          </span>";
 
             //to get new questions after the ID
             $hiddenQiD = "<input type='hidden' class='lastMsgID' style='float: $pos' value='$qId'>";
 
             //check if there is any reaction on question
-            if ($ifActive || $beingDiscussed) {
-                $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-                $out .= "<div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention' style='$float $bottom'>
-                            <div class='question-content'>
-                                $hiddenQiD
+            $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
+            $out .= "<div class='col-sm-12 ask-question question-$qId $pinClass' data-attention='$needsAttention' style='$float $bottom'>
+                        <div class='question-content'>
+                            $hiddenQiD
+                            <a class='question-link' href='ask_question_chat.php?quId=$qId&sessionID=$sessionId'>
                                 <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
-                                <div style='display: flex; text-align: center; color: #888'>
-                                $badge
-                                $pin
-                                <span class='bubble-for-badge button-close badge-close-$qId' style='display: none; $badgeSide'>
-                                    <img class='card-badge' src='html/icons/icon-close.png'/>
-                                </span>
-                                </div>
-                                $arrow
+                            </a>
+                            <div style='display: flex; text-align: center; color: #888'>
+                            $badge
+                            $pin
+                            <span class='bubble-for-badge button-close badge-close-$qId' style='display: none; $badgeSide'>
+                                <img class='card-badge' src='html/icons/icon-close.png'/>
+                            </span>
                             </div>
-                         </div>$clear";
-            } else {
-                $hide  = "hide-card-details";
-                $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-                $out .= "<div class='col-sm-12 ask-question question-$qId hide-unImpQuestion' data-attention='$needsAttention' style='$float $bottom'>
-                            <div class='question-content $hide'>
-                                $hiddenQiD
-                                <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
-                                <div style='display: flex; text-align: center; color: #888'>
-                                $badge
-                                <span class='bubble-for-badge button-close badge-close-$qId' onclick='closeQuestionCard($qId)' style='$badgeSide'>
-                                    <img class='card-badge' src='html/icons/icon-close.png'/>
-                                </span>
-                                </div>
-                                $arrow
-                            </div>
-                         </div>$clear";
-            }
-        } else { $out .= "<div class='col-sm-12 ask-question no-question'><p>no new questions ...</p></div>"; }
+                            $arrow
+                        </div>
+                     </div>$clear";
+        } else { $out .= ""; }
     }
     $out .= "</div>";
+    return $out;
+}
+
+function pinContainer($sessionId){
+
+    $closeBtn = "<span class='bubble-for-badge badge-container-close' style='cursor: pointer; right: 10px; padding: 10px; top: 10px;'>
+                    <img class='card-badge' src='html/icons/icon-close.png'/>
+                </span>";
+
+    $out = "<div class='pin-container'> $closeBtn 
+                <h1 style='margin-left: 20px'>Pinned Question</h1>
+                <div class='pinned-questions'></div>
+            </div>";
+
     return $out;
 }
 
@@ -293,6 +308,14 @@ function addSortButton(){
     return $out;
 }
 
+function addOpenPinButton(){
+    $out = "<span class='bubble-for-badge badge-pin-container' style='cursor: pointer; right: auto; left: 10px; padding: 10px; top: 10px;'>
+            <img class='card-badge' src='html/icons/icon-pin-left.png'/>
+            <span class='tooltiptext'>Tooltip text</span>
+            </span>";
+    return $out;
+}
+
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="javascript/presentationView.js"></script>
@@ -333,14 +356,14 @@ function addSortButton(){
                     var pair = output.split(',');
                     for(var i = 0; i < (pair.length-1); i++){
                         var val = pair[i].split("|");
-                        console.log(val[0]+" -> "+val[1] + " -> " + val[2]);
+//                        console.log(val[0]+" -> "+val[1] + " -> " + val[2]);
 
                         var q       = parseInt(val[0]);
                         var font    = parseInt(val[1]);
                         var convo   = parseInt(val[2]);
                         //change font size if attention changes
                         var fontSize = (13+(font/0.5));
-                        if(fontSize > 40) fontSize = "40px";
+                        if(fontSize > 20) fontSize = "20px";
                         else fontSize = fontSize+"px";
                         $(".txt-question-"+q).css("font-size",fontSize);
 

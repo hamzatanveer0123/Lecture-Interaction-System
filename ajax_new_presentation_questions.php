@@ -31,77 +31,98 @@ function displayNewQuestions($sessionId, $lastMsgID)
             $needsAttention = $questions[$i]->needs_attention;
             $studentId      = $questions[$i]->student_id;
             $questionText   = $questions[$i]->question;
+            $pinLocation    = $questions[$i]->pin_location;
+            $timeadded      = $questions[$i]->timeadded;
 
             if($question) {
 
+                //TODO: keep track of number of characters as well.
+                //if more characters than keep font size proportional.
                 $fontSize = (13 + ($needsAttention / 0.5));
 
-                if ($fontSize > 40) {
-                    $fontSize = "40px";
+                if ($fontSize > 20) {
+                    $fontSize = "20px";
                 } else {
                     $fontSize = $fontSize . "px";
                 }
 
-                $ifActive       = ifActive($question);
-                $beingDiscussed = ifBeingDiscussed($question);
+                $timeAdded     = dataConnection::time2db($timeadded);
+                if($timeAdded){
+                    $timeNow = dataConnection::time2db(time());
 
-                $showBadge = "<span class='bubble-for-badge badge-discussion-$qId'>
-                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
-                          </span>";
+                    $date1Timestamp = strtotime($timeAdded);
+                    $date2Timestamp = strtotime($timeNow);
 
-                $hideBadge = "<span class='bubble-for-badge badge-discussion-$qId' style='display: none'>
-                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
-                          </span>";
+                    //find difference between two times
+                    $difference = round(abs($date1Timestamp - $date2Timestamp));
+                }
 
-                if($position == "left"){
-                    $float = "float: right !important;";
+                $JUMP   = 1;
+                $bottom = "bottom: ".($difference*$JUMP)."px";
+
+                $pinClass = "";
+                $pinned = 0;
+                if(intval($pinLocation) > 0){
+                    $pinClass = "pinned";
+                    $bottom = "bottom: ".$pinLocation."px";
+                    $pinned = 1;
+                }
+
+                $uinfo = checkLoggedInUser();
+
+                if($$position == "left"){
+                    $pos    = "right";
+                    $float  = "float: right !important;";
                     $badgeSide = "right: -10px !important";
-                    //to get new questions after the ID
-                    $hiddenQiD = "<input type='hidden' style='float: right' class='lastMsgID' value='$qId'>";
                     $arrow = "<div class='arrow-right'></div>";
                     $clear = "";
+                    if(true) {
+                        $pin = "<span onclick='pinQuestion($qId, this, $pinned, $sessionId)' class='bubble-for-badge pin' style='left: -10px !important; right: auto !important; background-color: #009688;'>
+                            <img class='card-badge' src='html/icons/icon-pin-right.png'/>
+                        </span>";
+                    }
                 } else {
-                    $float = "float: left !important;";
+                    $pos    = "left";
+                    $float  = "float: left !important;";
                     $badgeSide = "left: -16px !important; right: auto !important";
-                    //to get new questions after the ID
-                    $hiddenQiD = "<input type='hidden' style='float: left' class='lastMsgID' value='$qId'>";
                     $arrow = "<div class='arrow-left'></div>";
                     $clear = "<div style='clear:both'></div>";
+                    if(true) {
+                        $pin = "<span onclick='pinQuestion($qId, this, $pinned, $sessionId)' class='bubble-for-badge pin' style='background-color: #009688;'>
+                            <img class='card-badge' src='html/icons/icon-pin-left.png'/>
+                        </span>";
+                    }
                 }
 
+                $beingDiscussed = ifBeingDiscussed($question);
+
+                $showBadge = "<span class='bubble-for-badge badge-discussion-$qId faa-pulse animated' style='$badgeSide'>
+                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
+                          </span>";
+
+                $hideBadge = "<span class='bubble-for-badge badge-discussion-$qId faa-pulse animated' style='display: none; $badgeSide'>
+                            <img class='card-badge' src='html/icons/badge-discussion.png'/>
+                          </span>";
+
+                //to get new questions after the ID
+                $hiddenQiD = "<input type='hidden' class='lastMsgID' style='float: $pos' value='$qId'>";
+
                 //check if there is any reaction on question
-                if ($ifActive || $beingDiscussed) {
-                    $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-                    $out .= "<div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention' style='$float; bottom: 0px'>
-                            <div class='question-content'>
-                                $hiddenQiD
-                                <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
-                                <div style='display: flex; text-align: center; color: #888'>
-                                $badge
-                                <span class='bubble-for-badge button-close badge-close-$qId' style='display: none; $badgeSide'>
-                                    <img class='card-badge' src='html/icons/icon-close.png'/>
-                                </span>
-                                </div>
+                $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
+                $out .= "<div class='col-sm-12 ask-question question-$qId $pinClass' data-attention='$needsAttention' style='$float $bottom'>
+                        <div class='question-content'>
+                            $hiddenQiD
+                            <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
+                            <div style='display: flex; text-align: center; color: #888'>
+                            $badge
+                            $pin
+                            <span class='bubble-for-badge button-close badge-close-$qId' style='display: none; $badgeSide'>
+                                <img class='card-badge' src='html/icons/icon-close.png'/>
+                            </span>
                             </div>
                             $arrow
-                         </div>$clear";
-                } else {
-                    $hide  = "hide-card-details";
-                    $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-                    $out .= "<div class='col-sm-12 ask-question question-$qId hide-unImpQuestion' data-attention='$needsAttention' style='$float;  bottom: 0px'>
-                            <div class='question-content $hide'>
-                                $hiddenQiD
-                                <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
-                                <div style='display: flex; text-align: center; color: #888'>
-                                $badge
-                                <span class='bubble-for-badge button-close badge-close-$qId' onclick='closeQuestionCard($qId)' style='$badgeSide'>
-                                    <img class='card-badge' src='html/icons/icon-close.png'/>
-                                </span>
-                                </div>
-                            </div>
-                            $arrow
-                         </div>$clear";
-                }
+                        </div>
+                     </div>$clear";
             } else { $out .= "<div class='col-sm-12 ask-question no-question'><p>no new questions ...</p></div>"; }
         }
     }

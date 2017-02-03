@@ -157,7 +157,7 @@ function displayQuestions($sessionId)
                             </div>
                          </div>";
             }
-        } else { $out .= "<div class='col-sm-12 ask-question'><p>no new questions</p></div>"; }
+        } else { $out .= ""; }
     }
     $out .= "</div>";
     return $out;
@@ -295,7 +295,7 @@ function addSortButton(){
     function updateQuestions() {
         var lastMsgVal = 0;
         //improve this
-        var divList    = $(".lastMsgId");
+        var divList    = $(".lastMsgID");
         divList.sort(function(a, b){
             return parseInt(a.value) > parseInt(b.value) ? 1 : -1;
         });
@@ -341,8 +341,8 @@ function addSortButton(){
                             $(".question-"+q).click();
                         }
                         else {
-                            //$(".badge-discussion-" + q).hide();
-                            //$(".badge-close-" + q).show();
+                            $(".badge-discussion-" + q).hide();
+                            $(".badge-close-" + q).show();
                             //closeQuestionCard(q);
                         }
                     }

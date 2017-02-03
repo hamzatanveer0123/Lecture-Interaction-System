@@ -37,7 +37,7 @@ else
     //$esform->disable('defaultQuActiveSecs');
     //$esform->disable('allowQuReview');
     $esform->disable('maxMessagelength');
-    //$esform->disable('allowTeacherQu');
+    $esform->disable('allowTeacherQu');
     if(requestSet('sessionID'))
     {
         $thisSession = session::retrieve_session(requestInt('sessionID'));

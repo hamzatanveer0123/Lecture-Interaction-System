@@ -34,5 +34,5 @@ abstract class questionBase
     }
 
     abstract function report($thisSession, $qi, $detailed = false);
-    //static function getEditForm();
+    abstract static function getEditForm();
 }

@@ -14,9 +14,6 @@ $uinfo = checkLoggedInUser();
 $question_id    = "";
 $message_id     = "";
 
-var_dump($_REQUEST['qID']);
-var_dump($_REQUEST['mID']);
-
 if (isset($_REQUEST['qID'])) {
     $question_id = $_REQUEST['qID'];
 }

@@ -68,6 +68,14 @@ $(".badge-toggle").click(function (e) {
     }
 });
 
+$(".badge-pin-container").click(function (e) {
+    $(".pin-container").css("left","0%");
+});
+
+$(".badge-container-close").click(function (e) {
+    $(".pin-container").css("left","-40%");
+});
+
 $(".badge-sort").click(function (e) {
     sort();
 });
@@ -147,15 +155,75 @@ function setListener() {
 
 }
 
-function pinQuestion(qID, sessionId, thisPin) {
+//standard
+// function pinQuestion(qID, thisPin, isPinned) {
+//     console.log(qID);
+//     console.log(thisPin);
+//
+//     if(isPinned == 0){
+//         var bottom = $(".question-"+qID).css("bottom");
+//         $(".question-"+qID).addClass("pinned");
+//         // $(".question-"+qID).css("bottom", bottom + " !important");
+//     } else {
+//         var bottom = 0;
+//         $(".question-"+qID).removeClass("pinned");
+//     }
+//
+//     $.ajax({
+//         type: 'post',
+//         url: 'ajax_setQuestionPosition.php?questionID='+qID+'&position='+bottom,
+//         success: function (data) {
+//             console.log(data);
+//             if(isPinned == 0){
+//                 $(thisPin).attr("onclick","pinQuestion("+qID+",this,1)");
+//                 var question = $($(".question-"+qID)[0]).find("p").text();
+//                 $(".pinned-questions").append("<div class='pin-container-question'>"+question+"</div>");
+//
+//             } else {
+//                 $(thisPin).attr("onclick","pinQuestion("+qID+",this,0)");
+//             }
+//         },
+//         failure: function (data) {
+//             console.log(data);
+//         }
+//     });
+// }
+
+//experimental
+function pinQuestion(qID, thisPin, isPinned, sessionID) {
     console.log(qID);
-    console.log(sessionId);
     console.log(thisPin);
 
-    var bottom = $(".question-"+qID).css("bottom");
-    $(".question-"+qID).css("bottom", bottom + " !important");
-}
+    if(isPinned == 0){
+        var bottom = $(".question-"+qID).css("bottom");
+        $(".question-"+qID).addClass("pinned");
+    } else {
+        var bottom = 0;
+        $(".question-"+qID).removeClass("pinned");
+    }
 
+    $.ajax({
+        type: 'post',
+        url: 'ajax_setQuestionPosition.php?questionID='+qID+'&position='+bottom,
+        success: function (data) {
+            console.log(data);
+            if(isPinned == 0){
+                $(thisPin).attr("onclick","pinQuestion("+qID+",this,1,"+sessionID+")");
+                var question = $($(".question-"+qID)[0]).find("p").text();
+                var link = "<a href='ask_question_chat.php?quId="+qID+"&sessionID="+sessionID+"'>"+question+"</a>"
+                var html = "<div class='pin-container-question pinned-"+qID+"'>"+link+"</div>";
+                $(".pinned-questions").append(html);
+
+            } else {
+                $(thisPin).attr("onclick","pinQuestion("+qID+",this,0,"+sessionID+")");
+                $(".pinned-"+qID).remove();
+            }
+        },
+        failure: function (data) {
+            console.log(data);
+        }
+    });
+}
 
 function timeline() {
 
@@ -175,7 +243,9 @@ function timeline() {
         } else {
             var bottom = bottomValue.split("px")[0];
         }
-        $(thisDiv).css("bottom",(parseInt(bottom)+10)+"px");
+        if(!$(thisDiv).hasClass("pinned")){
+            $(thisDiv).css("bottom",(parseInt(bottom)+2)+"px");
+        }
     }
 }
 
