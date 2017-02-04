@@ -1,11 +1,9 @@
 html{
-    height:100%;
 }
 
 body{
     background-color: #466474 !important;
     overflow: hidden;
-    height:100%;
 }
 
 #main {
@@ -44,8 +42,8 @@ hr{
     background: #f5f5f5;
     position: absolute;
     height: 100%;
-    width: 40%;
-    left: -40%;
+    width: 30%;
+    left: -30%;
     z-index: 9999;
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
     -webkit-box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.5);
@@ -433,15 +431,15 @@ hr{
 /*For Tooltip*/
 
 /* Tooltip text */
-.tooltiptext {
+.tooltip-text {
     visibility: hidden;
-    width: 120px;
+    width: 150px;
     background-color: #373737;
     color: #fff;
     text-align: center;
     padding: 5px 0;
     border-radius: 6px;
-
+    margin-top: -5px;
     /* Position the tooltip text - see examples below! */
     position: absolute;
     z-index: 1;
@@ -449,6 +447,11 @@ hr{
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.badge-pin-container:hover .tooltiptext {
+.badge-pin-container:hover .tooltip-text {
+    visibility: visible;
+}
+
+.badge-toggle:hover .tooltip-text {
+    margin-left:-180px;
     visibility: visible;
 }

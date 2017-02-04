@@ -6,11 +6,14 @@ var timelineInterval;
 
 $( document ).ready(function() {
 
-    setListener();
     startTimelineInterval();
 
 });
 
+
+//=======================//
+//intervals for time-line//
+//=======================//
 function startTimelineInterval() {
     timelineInterval = setInterval("timeline()",1000);
     $(".message-container").removeClass("make-scrollable");
@@ -28,28 +31,9 @@ function stopTimelineInterval() {
         scrollTop: $(".message-container")[0].scrollHeight
     }, 2000);
 }
+//--------------------------------------------------------//
 
-$('#add_studentsQuestion').on('submit', function (e) {
-    e.preventDefault();
-    if ($('textarea[name="question"]').val()) {
-        $.ajax({
-            type: 'post',
-            url: 'ajax_studentsQuestion.php',
-            data: $('form').serialize(),
-            success: function (data) {
-                console.log(data);
-                $(".message-container").animate({ scrollTop: $(".message-container").prop("scrollHeight")}, "slow");
-                $('textarea[name="question"]').val("");
-            },
-            failure: function (data) {
-                alert(data);
-            }
-        });
-    } else {
-        alert("please add a question!");
-    }
-});
-
+//listeners
 $(".badge-toggle").click(function (e) {
     iconClass = $(".badge-toggle").find("i")[0];
     var className = $(iconClass).attr("class");
@@ -73,87 +57,8 @@ $(".badge-pin-container").click(function (e) {
 });
 
 $(".badge-container-close").click(function (e) {
-    $(".pin-container").css("left","-40%");
+    $(".pin-container").css("left","-30%");
 });
-
-$(".badge-sort").click(function (e) {
-    sort();
-});
-
-function sort() {
-    var divList = $(".ask-question");
-    divList.sort(function(a, b){
-        return $(a).data("attention") < $(b).data("attention") ? 1 : -1;
-    });
-    $(".message-container").html(divList);
-    setListener();
-}
-
-function closeQuestionCard(qId) {
-
-    var qDiv = $(".badge-close-"+qId).parentsUntil($("ask-question"),".col-sm-12");
-
-    var contentDiv = $(qDiv).find('div')[0];
-    $(contentDiv).hide();
-    $(qDiv).addClass("hide-unImpQuestion");
-
-    //to create smooth animation  of opening and closing
-    // var WAIT = 40;
-    // setTimeout(function(){
-    //     //toggle to open and close card
-    //     $(qDiv).addClass("hide-unImpQuestion");
-    // }, WAIT);
-}
-
-function plusplusLike(sId,qId,liked) {
-    $.ajax({
-        type: 'get',
-        url: 'ajax_likeQuestion.php?sessionID='+sId+'&questionID='+qId+'&liked='+liked,
-        success: function (data) {
-            console.log(data);
-            if(liked == 1) {
-                $(".badge-question-" + qId).css("color", "#197fcd");
-                $(".badge-question-" + qId).css("font-weight", "800");
-                $(".badge-question-" + qId).attr("onclick","plusplusLike("+sId+","+qId+",0)");
-            }
-            else {
-                $(".badge-question-" + qId).css("color", "#888");
-                $(".badge-question-" + qId).css("font-weight", "300");
-                $(".badge-question-" + qId).attr("onclick","plusplusLike("+sId+","+qId+",1)");
-            }
-        },
-        failure: function (data) {
-            alert(data);
-        }
-    });
-}
-
-
-function setListener() {
-
-    //expand on click
-    $(".hide-unImpQuestion").click(function (e) {
-
-        //if close button is pressed!
-        var target = e.target.className;
-        if(target == "card-badge" || (target.indexOf("bubble-for-badge") == 0)) return false;
-
-        //to create smooth animation  of opening and closing
-        var WAIT = 40;
-
-        var cardContent     = $(this).find('.question-content');
-        // $(cardContent).show();
-
-        setTimeout(function(){
-            $(cardContent).show();
-        }, WAIT);
-
-        //toggle to open and close card
-        $(this).removeClass("hide-unImpQuestion");
-        checkOverflow();
-    });
-
-}
 
 //standard
 // function pinQuestion(qID, thisPin, isPinned) {
@@ -189,22 +94,22 @@ function setListener() {
 //     });
 // }
 
-//experimental
+//pin an important question
 function pinQuestion(qID, thisPin, isPinned, sessionID) {
-    console.log(qID);
-    console.log(thisPin);
 
     if(isPinned == 0){
         var bottom = $(".question-"+qID).css("bottom");
-        $(".question-"+qID).addClass("pinned");
     } else {
         var bottom = 0;
-        $(".question-"+qID).removeClass("pinned");
     }
 
     $.ajax({
-        type: 'post',
-        url: 'ajax_setQuestionPosition.php?questionID='+qID+'&position='+bottom,
+        type: 'POST',
+        url: 'ajax_setQuestionPosition.php',
+        data:{
+            questionID: qID,
+            position: bottom
+        },
         success: function (data) {
             console.log(data);
             if(isPinned == 0){
@@ -249,8 +154,9 @@ function timeline() {
     }
 }
 
-//
 // Archived
+//
+// used for auto shrinking
 //
 // function checkOverflow() {
 //

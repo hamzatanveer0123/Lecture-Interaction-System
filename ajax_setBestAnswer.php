@@ -14,11 +14,11 @@ $uinfo = checkLoggedInUser();
 $question_id    = "";
 $message_id     = "";
 
-if (isset($_REQUEST['qID'])) {
-    $question_id = $_REQUEST['qID'];
+if (isset($_POST['qID'])) {
+    $question_id = $_POST['qID'];
 }
-if (isset($_REQUEST['mID'])) {
-    $message_id = $_REQUEST['mID'];
+if (isset($_POST['mID'])) {
+    $message_id = $_POST['mID'];
 }
 
 $question = new studentsQuestion();

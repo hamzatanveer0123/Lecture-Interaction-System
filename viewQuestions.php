@@ -304,7 +304,12 @@ function addSortButton(){
             lastMsgVal  = lastIdInput.value;
         }
         $.ajax({
-            url: 'ajax_new_questions.php?sID=<?php echo $sessionId; ?>&mID='+lastMsgVal,
+            type: "POST",
+            url: "ajax_new_questions.php",
+            data: {
+                sID: <?php echo $sessionId; ?>,
+                mID: lastMsgVal
+            },
             success: function(html) {
                 if (html.indexOf("ask-question") >= 0){
                     $(".message-container").append(html);
@@ -316,7 +321,11 @@ function addSortButton(){
     setInterval("checkFontSize()",10000);
     function checkFontSize() {
         $.ajax({
-            url: 'findChangeInAttention.php?sID=<?php echo $sessionId; ?>',
+            type: "POST",
+            url: 'ajax_attention_changes.php',
+            data: {
+                sID: <?php echo $sessionId; ?>
+            },
             success: function(output) {
                 if (output){
                     var pair = output.split(',');

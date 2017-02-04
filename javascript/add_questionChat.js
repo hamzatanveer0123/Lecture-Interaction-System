@@ -11,7 +11,7 @@ $('#add_questionChat').on('submit', function (e) {
 
     if ($('textarea[name="chatMessage"]').val()){
         $.ajax({
-            type: 'post',
+            type: 'POST',
             url: 'ajax_questionChat.php',
             data: $('form').serialize(),
             success: function (data) {
@@ -28,7 +28,7 @@ $('#add_questionChat').on('submit', function (e) {
 
 function selectBestAsnwer(questionId, messageId) {
     $.ajax({
-        type: 'post',
+        type: 'POST',
         url: 'ajax_setBestAnswer.php',
         data: {
             qID : questionId,

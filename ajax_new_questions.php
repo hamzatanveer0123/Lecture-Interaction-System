@@ -11,8 +11,8 @@ require_once('lib/database.php');
 require_once('lib/forms.php');
 include_once('corelib/mobile.php');
 
-$sessionId = isset($_REQUEST['sID'])? $_REQUEST['sID']:"0";
-$lastMsgID = isset($_REQUEST['mID'])? $_REQUEST['mID']:"0";
+$sessionId = isset($_POST['sID'])? $_POST['sID']:"0";
+$lastMsgID = isset($_POST['mID'])? $_POST['mID']:"0";
 
 echo displayNewQuestions($sessionId, $lastMsgID);
 function displayNewQuestions($sessionId, $lastMsgID)

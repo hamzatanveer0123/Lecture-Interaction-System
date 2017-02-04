@@ -12,8 +12,8 @@ require_once('lib/database.php');
 $question_id    = "";
 $position       = "";
 
-if(isset($_REQUEST['questionID'])){$question_id=$_REQUEST['questionID'];}
-if(isset($_REQUEST['position'])){$position=$_REQUEST['position'];}
+if(isset($_POST['questionID'])){$question_id=$_POST['questionID'];}
+if(isset($_POST['position'])){$position=$_POST['position'];}
 
 
 $question = new studentsQuestion();

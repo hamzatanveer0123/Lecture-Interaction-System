@@ -52,8 +52,8 @@ else
 //        $template->pageData['mainBody'] .= addSortButton();
         $template->pageData['mainBody'] .= addToggleButton();
         $template->pageData['mainBody'] .= addOpenPinButton();
-        $template->pageData['mainBody'] .= pinContainer($sessionId);
         $template->pageData['mainBody'] .= displayQuestions($sessionId);
+        $template->pageData['mainBody'] .= pinContainer($sessionId);
 //        $template->pageData['mainBody'] .= addQuestion($sessionId);
 
     }
@@ -110,11 +110,11 @@ function displayQuestions($sessionId)
             $JUMP   = 1;
             $bottom = "bottom: ".($difference*$JUMP)."px";
 
-            $pinClass = "";
+//            $pinClass = "";
             $pinned = 0;
             if(intval($pinLocation) > 0){
-                $pinClass = "pinned";
-                $bottom = "bottom: ".$pinLocation."px";
+//                $pinClass = "pinned";
+//                $bottom = "bottom: ".$pinLocation."px";
                 $pinned = 1;
             }
 
@@ -159,7 +159,7 @@ function displayQuestions($sessionId)
 
             //check if there is any reaction on question
             $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-            $out .= "<div class='col-sm-12 ask-question question-$qId $pinClass' data-attention='$needsAttention' style='$float $bottom'>
+            $out .= "<div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention' style='$float $bottom'>
                         <div class='question-content'>
                             $hiddenQiD
                             <a class='question-link' href='ask_question_chat.php?quId=$qId&sessionID=$sessionId'>
@@ -296,6 +296,7 @@ function ifBeingDiscussed($q){
 
 function addToggleButton(){
     $out = "<span class='bubble-for-badge badge-toggle' style='cursor: pointer'>
+            <span class='tooltip-text'>Toggle Live Feed</span>
             <i class='fa fa-pause' aria-hidden='true' style='color: #ececec'></i>
             </span>";
     return $out;
@@ -311,7 +312,7 @@ function addSortButton(){
 function addOpenPinButton(){
     $out = "<span class='bubble-for-badge badge-pin-container' style='cursor: pointer; right: auto; left: 10px; padding: 10px; top: 10px;'>
             <img class='card-badge' src='html/icons/icon-pin-left.png'/>
-            <span class='tooltiptext'>Tooltip text</span>
+            <span class='tooltip-text'>Pinned Questions</span>
             </span>";
     return $out;
 }
@@ -338,7 +339,13 @@ function addOpenPinButton(){
             position    = $(lastIdInput).css("float");
         }
         $.ajax({
-            url: 'ajax_new_presentation_questions.php?sID=<?php echo $sessionId; ?>&mID='+lastMsgVal+'&pos='+position,
+            type: "POST",
+            url: 'ajax_new_presentation_questions.php',
+            data: {
+                sID: <?php echo $sessionId; ?>,
+                mID: lastMsgVal,
+                pos: position
+            },
             success: function(html) {
                 if (html.indexOf("ask-question") >= 0){
                     $(".message-container").append(html);
@@ -350,13 +357,17 @@ function addOpenPinButton(){
     setInterval("checkFontSize()",10000);
     function checkFontSize() {
         $.ajax({
-            url: 'findChangeInAttention.php?sID=<?php echo $sessionId; ?>',
+            type: "POST",
+            url: 'ajax_attention_changes.php',
+            data: {
+                sID: <?php echo $sessionId; ?>
+            },
             success: function(output) {
                 if (output){
                     var pair = output.split(',');
                     for(var i = 0; i < (pair.length-1); i++){
                         var val = pair[i].split("|");
-//                        console.log(val[0]+" -> "+val[1] + " -> " + val[2]);
+//                      console.log(val[0]+" -> "+val[1] + " -> " + val[2]);
 
                         var q       = parseInt(val[0]);
                         var font    = parseInt(val[1]);

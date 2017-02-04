@@ -11,9 +11,9 @@ require_once('lib/database.php');
 require_once('lib/forms.php');
 include_once('corelib/mobile.php');
 
-$sessionId = isset($_REQUEST['sID'])? $_REQUEST['sID']:"0";
-$lastMsgID = isset($_REQUEST['mID'])? $_REQUEST['mID']:"0";
-$position  = isset($_REQUEST['pos'])? $_REQUEST['pos']:"";
+$sessionId = isset($_POST['sID'])? $_POST['sID']:"0";
+$lastMsgID = isset($_POST['mID'])? $_POST['mID']:"0";
+$position  = isset($_POST['pos'])? $_POST['pos']:"";
 
 echo displayNewQuestions($sessionId, $lastMsgID);
 function displayNewQuestions($sessionId, $lastMsgID)
@@ -70,7 +70,7 @@ function displayNewQuestions($sessionId, $lastMsgID)
 
                 $uinfo = checkLoggedInUser();
 
-                if($$position == "left"){
+                if($position == "left"){
                     $pos    = "right";
                     $float  = "float: right !important;";
                     $badgeSide = "right: -10px !important";

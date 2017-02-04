@@ -16,14 +16,14 @@ $student_id     = $uinfo['uname'];
 $question_id    = "";
 $liked          = "";
 
-if (isset($_GET['sessionID'])) {
-    $session_id = $_GET['sessionID'];
+if (isset($_POST['sessionID'])) {
+    $session_id = $_POST['sessionID'];
 }
-if (isset($_GET['questionID'])) {
-    $question_id = $_GET['questionID'];
+if (isset($_POST['questionID'])) {
+    $question_id = $_POST['questionID'];
 }
-if (isset($_GET['liked'])) {
-    $liked = $_GET['liked'];
+if (isset($_POST['liked'])) {
+    $liked = $_POST['liked'];
 }
 
 if($liked == 1) {
