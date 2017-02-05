@@ -350,8 +350,8 @@ function addSortButton(){
                             $(".question-"+q).click();
                         }
                         else {
-                            $(".badge-discussion-" + q).hide();
-                            $(".badge-close-" + q).show();
+                            //$(".badge-discussion-" + q).hide();
+                            //$(".badge-close-" + q).show();
                             //closeQuestionCard(q);
                         }
                     }

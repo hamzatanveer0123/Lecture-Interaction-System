@@ -1,9 +1,11 @@
 html{
+    height:100%;
 }
 
 body{
     background-color: #466474 !important;
     overflow: hidden;
+    height:100%;
 }
 
 #main {
@@ -247,6 +249,13 @@ hr{
     -webkit-box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.3);
     -moz-box-shadow:    0px 3px 3px 0px rgba(0, 0, 0, 0.3);
     box-shadow:         0px 3px 3px 0px rgba(0, 0, 0, 0.3);
+}
+
+.pin-clear{
+    color: red;
+    font-size: 22px !important;
+    position: absolute;
+    right:  20px;
 }
 
 .card-badge{

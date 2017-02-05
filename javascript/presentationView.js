@@ -97,11 +97,27 @@ $(".badge-container-close").click(function (e) {
 //pin an important question
 function pinQuestion(qID, thisPin, isPinned, sessionID) {
 
-    if(isPinned == 0){
-        var bottom = $(".question-"+qID).css("bottom");
-    } else {
-        var bottom = 0;
-    }
+    // achieved
+    // if(isPinned == 0){
+    //     var bottom = $(".question-"+qID).css("bottom");
+    // } else {
+    //     var bottom = 0;
+    // }
+    //
+    // if(bottom == "auto"){
+    //     bottom = 1;
+    // }
+
+    //no need to keep track of pin location
+    //so using inPinned as booleant to show
+    //if question is pinned or not.........
+
+    var bottom;
+
+    if(isPinned == 0)
+        bottom = 1;
+    else
+        bottom = 0;
 
     $.ajax({
         type: 'POST',
@@ -115,7 +131,7 @@ function pinQuestion(qID, thisPin, isPinned, sessionID) {
             if(isPinned == 0){
                 $(thisPin).attr("onclick","pinQuestion("+qID+",this,1,"+sessionID+")");
                 var question = $($(".question-"+qID)[0]).find("p").text();
-                var link = "<a href='ask_question_chat.php?quId="+qID+"&sessionID="+sessionID+"'>"+question+"</a>"
+                var link = "<a href='ask_question_chat.php?qId="+qID+"&sessionID="+sessionID+"'>"+question+"</a>"
                 var html = "<div class='pin-container-question pinned-"+qID+"'>"+link+"</div>";
                 $(".pinned-questions").append(html);
 
@@ -123,6 +139,25 @@ function pinQuestion(qID, thisPin, isPinned, sessionID) {
                 $(thisPin).attr("onclick","pinQuestion("+qID+",this,0,"+sessionID+")");
                 $(".pinned-"+qID).remove();
             }
+        },
+        failure: function (data) {
+            console.log(data);
+        }
+    });
+}
+
+function clearPinned(qID) {
+    $(".pinned-"+qID).remove();
+    var bottom = 0;
+    $.ajax({
+        type: 'POST',
+        url: 'ajax_setQuestionPosition.php',
+        data:{
+            questionID: qID,
+            position: bottom
+        },
+        success: function (data) {
+            console.log(data);
         },
         failure: function (data) {
             console.log(data);
@@ -148,9 +183,7 @@ function timeline() {
         } else {
             var bottom = bottomValue.split("px")[0];
         }
-        if(!$(thisDiv).hasClass("pinned")){
-            $(thisDiv).css("bottom",(parseInt(bottom)+2)+"px");
-        }
+        $(thisDiv).css("bottom",(parseInt(bottom)+2)+"px");
     }
 }
 

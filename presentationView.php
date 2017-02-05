@@ -17,6 +17,8 @@ $uinfo = checkLoggedInUser();
 $template->pageData['pagetitle'] = $CFG['sitetitle'];
 $template->pageData['homeURL'] = $_SERVER['PHP_SELF'];
 
+$pinnedQuestions = "";
+
 
 if((isset($_SERVER['HTTPS']))&&($_SERVER['HTTPS']=='on'))
 {
@@ -53,7 +55,7 @@ else
         $template->pageData['mainBody'] .= addToggleButton();
         $template->pageData['mainBody'] .= addOpenPinButton();
         $template->pageData['mainBody'] .= displayQuestions($sessionId);
-        $template->pageData['mainBody'] .= pinContainer($sessionId);
+        $template->pageData['mainBody'] .= pinContainer();
 //        $template->pageData['mainBody'] .= addQuestion($sessionId);
 
     }
@@ -69,7 +71,7 @@ function displayQuestions($sessionId)
 {
 
     global $uinfo;
-
+    global $pinnedQuestions;
     $loggedInUser = $uinfo['uname'];
     $questions = studentsQuestion::retrieve_sessionQuestions($sessionId);
     $out = "<div class='message-container'>";
@@ -113,8 +115,13 @@ function displayQuestions($sessionId)
 //            $pinClass = "";
             $pinned = 0;
             if(intval($pinLocation) > 0){
-//                $pinClass = "pinned";
-//                $bottom = "bottom: ".$pinLocation."px";
+                $clear = "<span class='bubble-for-clear' style='cursor: pointer'>
+                            <i class='fa fa-minus-circle pin-clear' onclick='clearPinned($qId)' aria-hidden='true'></i>
+                          </span>";
+                $link = "<a href='ask_question_chat.php?quId=$qId&sessionID=$sessionId'>$questionText</a>";
+                $pinnedQuestions .= "<div class='pin-container-question pinned-$qId'>$link $clear</div>";
+                //$pinClass = "pinned";
+                //$bottom = "bottom: ".$pinLocation."px";
                 $pinned = 1;
             }
 
@@ -181,7 +188,9 @@ function displayQuestions($sessionId)
     return $out;
 }
 
-function pinContainer($sessionId){
+function pinContainer(){
+
+    global $pinnedQuestions;
 
     $closeBtn = "<span class='bubble-for-badge badge-container-close' style='cursor: pointer; right: 10px; padding: 10px; top: 10px;'>
                     <img class='card-badge' src='html/icons/icon-close.png'/>
@@ -190,6 +199,7 @@ function pinContainer($sessionId){
     $out = "<div class='pin-container'> $closeBtn 
                 <h1 style='margin-left: 20px'>Pinned Question</h1>
                 <div class='pinned-questions'></div>
+                $pinnedQuestions
             </div>";
 
     return $out;
