@@ -166,7 +166,8 @@ function displayQuestions($sessionId)
 
             //check if there is any reaction on question
             $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-            $out .= "<div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention' style='$float $bottom'>
+            $out .= "<a href='ask_question_chat.php?quId=$qId&sessionID=$sessionId'>
+                     <div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention' style='$float $bottom'>
                         <div class='question-content'>
                             $hiddenQiD
                             <a class='question-link' href='ask_question_chat.php?quId=$qId&sessionID=$sessionId'>
@@ -181,7 +182,7 @@ function displayQuestions($sessionId)
                             </div>
                             $arrow
                         </div>
-                     </div>$clear";
+                     </div></a>$clear";
         } else { $out .= ""; }
     }
     $out .= "</div>";

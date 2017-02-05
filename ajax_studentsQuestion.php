@@ -14,8 +14,12 @@ $session_id = "";
 $student_id = $uinfo['uname'];
 $question   = "";
 
-if(isset($_POST['session_id'])){$session_id=$_POST['session_id'];}
-if(isset($_POST['question'])){$question=$_POST['question'];}
+if(isset($_POST['session_id'])){
+    $session_id = $_POST['session_id'];
+}
+if(isset($_POST['question'])){
+    $question = htmlspecialchars($_POST['question']);
+}
 
 $students_question = new studentsQuestion();
 
@@ -26,4 +30,5 @@ $students_question->timeadded   = time();
 $students_question->answer_id   = 0;
 $students_question->viewed      = 0;
 $id = $students_question->insert();
+
 echo $id;

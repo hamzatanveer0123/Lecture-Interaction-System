@@ -130,7 +130,7 @@ function pinQuestion(qID, thisPin, isPinned, sessionID) {
             console.log(data);
             if(isPinned == 0){
                 $(thisPin).attr("onclick","pinQuestion("+qID+",this,1,"+sessionID+")");
-                var question = $($(".question-"+qID)[0]).find("p").text();
+                var question = escapeHTML($($(".question-"+qID)[0]).find("p").text());
                 var link = "<a href='ask_question_chat.php?qId="+qID+"&sessionID="+sessionID+"'>"+question+"</a>"
                 var html = "<div class='pin-container-question pinned-"+qID+"'>"+link+"</div>";
                 $(".pinned-questions").append(html);
@@ -148,7 +148,7 @@ function pinQuestion(qID, thisPin, isPinned, sessionID) {
 
 function clearPinned(qID) {
     $(".pinned-"+qID).remove();
-    var bottom = 0;
+    bottom
     $.ajax({
         type: 'POST',
         url: 'ajax_setQuestionPosition.php',
@@ -185,6 +185,10 @@ function timeline() {
         }
         $(thisDiv).css("bottom",(parseInt(bottom)+2)+"px");
     }
+}
+
+function escapeHTML(text) {
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 // Archived
