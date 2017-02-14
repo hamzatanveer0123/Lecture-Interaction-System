@@ -176,9 +176,6 @@ function displayQuestions($sessionId)
                             <div style='display: flex; text-align: center; color: #888'>
                             $badge
                             $pin
-                            <span class='bubble-for-badge button-close badge-close-$qId' style='display: none; $badgeSide'>
-                                <img class='card-badge' src='html/icons/icon-close.png'/>
-                            </span>
                             </div>
                             $arrow
                         </div>
@@ -365,7 +362,7 @@ function addOpenPinButton(){
         });
     }
 
-    setInterval("checkFontSize()",10000);
+    setInterval("checkFontSize()",3000);
     function checkFontSize() {
         $.ajax({
             type: "POST",

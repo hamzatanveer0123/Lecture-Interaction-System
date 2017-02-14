@@ -31,18 +31,6 @@ $session = session::retrieve_session($sessionId);
 
 $messages = chat_messages::retrieve_chat_messages_matching("question_id", $qId, 0, -1, "id DESC");
 
-$bestAnswer = studentsQuestion::getBestAnswer($qId);
-$bestAnswer = $bestAnswer[0];
-
-if($bestAnswer){
-    if($bestAnswer->student_id) {
-        $temp_user  = sessionMember::retrieve_sessionMember_matching("userID", $bestAnswer->student_id);
-        $user       = $temp_user[0];
-        $username   = $user->name;
-        $posted     = ago($bestAnswer->posted);
-    }
-    echo '<div class="info"><p class="bubble">'.$bestAnswer->message.'</p><p class="meta"><span class="username">'.$username.'</span><span class="time">'.$posted.'</span></p></div><br/>';
-}
 if($messages){
     $bestAnswer = "";
     $uinfo = checkLoggedInUser();

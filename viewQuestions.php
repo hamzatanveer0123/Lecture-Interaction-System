@@ -274,6 +274,7 @@ function addToggleButton(){
     $out = "<span class='bubble-for-badge badge-toggle' style='cursor: pointer'>
             <i class='fa fa-eye fa-2x' aria-hidden='true' style='color: #ececec'></i>
             </span>";
+
     return $out;
 }
 
@@ -318,7 +319,7 @@ function addSortButton(){
         });
     }
 
-    setInterval("checkFontSize()",10000);
+    setInterval("checkFontSize()",3000);
     function checkFontSize() {
         $.ajax({
             type: "POST",

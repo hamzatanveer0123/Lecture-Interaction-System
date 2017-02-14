@@ -5,7 +5,9 @@ require_once('config.php');
 require_once('lib/database.php');
 require_once('lib/forms.php');
 require_once('lib/ajax.php');
+require_once('lib/shared_funcs.php');
 include_once('corelib/mobile.php');
+
 $template = new templateMerge($TEMPLATE);
 
 $sessionID = requestInt('sessionID');
@@ -91,13 +93,41 @@ else
             }
         }
 
+        $breadcrumb = "";
+        $prevURL = "";
+        if(isset($_SERVER['HTTP_REFERER']))
+        {
+            $prevURL = $_SERVER['HTTP_REFERER'];
+            if (strpos($prevURL, 'viewQuestions.php') !== false) {
+                $breadcrumb = "<li><a href='viewQuestions.php?sessionID={$thisSession->id}'>View Questions</a></li>";
+
+            } else if(strpos($prevURL, 'presentationView.php') !== false){
+                $breadcrumb = "<li><a href='presentationView.php?sessionID={$thisSession->id}'>Presentation View</a></li>";
+            }
+        }
+
+        $bestAnswer = studentsQuestion::getBestAnswer($questionID);
+        $bestAnswer = $bestAnswer[0];
+
+        if($bestAnswer){
+            if($bestAnswer->student_id) {
+                $temp_user  = sessionMember::retrieve_sessionMember_matching("userID", $bestAnswer->student_id);
+                $user       = $temp_user[0];
+                $username   = $user->name;
+                $posted     = ago($bestAnswer->posted);
+            }
+            $answer = '<div class="info correct-answer"><p class="bubble" style="border-radius: 5px;">'.$bestAnswer->message.'</p><p class="meta"><span class="username">'.$username.'</span><span class="time">'.$posted.'</span></p></div>';
+        }
+
         $question = studentsQuestion::retrieve_studentsQuestion_matching("id",$questionID);
         $questionText = $question[0]->question;
         $template->pageData['afterContent'] = getAJAXScript($thisSession->id, $questionID);
         $template->pageData['breadcrumb'] .= "<li><a href='session_page.php?sessionID={$thisSession->id}'>{$thisSession->title}</a></li>";
+        $template->pageData['breadcrumb'] .= $breadcrumb;
         $template->pageData['breadcrumb'] .= "<li>Discussion</li>";
-        $template->pageData['mainBody'] .= '<h5>'.$questionText.'</h5>';
-        $template->pageData['mainBody'] .= '<h2 class="page-section extra-bottom">Discuss<span class="hidden-xs"> This Question</span><a class="pull-right" href="viewQuestions.php?sessionID='.$thisSession->id.'">Back<span class="hidden-xs"> to Questions</span></a></h2>';
+        $template->pageData['mainBody'] .= '<h2 style="text-decoration: underline">Discuss<span class="hidden-xs"> This Question</h2>';
+        $template->pageData['mainBody'] .= '<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$questionText.'</h3>';
+        $template->pageData['mainBody'] .= '<h3>'.$answer.'</h3>';
         $template->pageData['mainBody'] .= "<form id='add_questionChat' method='POST' class='form-horizontal'><div class='form-group'>";
         $template->pageData['mainBody'] .= "<div class='col-sm-12 col-xs-12'><input type='hidden' name='questionID' value='{$thisQuestion->id}' />";
         $template->pageData['mainBody'] .= "<input type='hidden' name='sessionID' value='{$thisSession->id}' />";

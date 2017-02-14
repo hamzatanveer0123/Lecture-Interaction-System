@@ -183,7 +183,7 @@ function timeline() {
         } else {
             var bottom = bottomValue.split("px")[0];
         }
-        $(thisDiv).css("bottom",(parseInt(bottom)+2)+"px");
+        $(thisDiv).css("bottom",(parseInt(bottom)+1)+"px");
     }
 }
 
