@@ -272,6 +272,7 @@ function loadingScreen(){
 
 function addToggleButton(){
     $out = "<span class='bubble-for-badge badge-toggle' style='cursor: pointer'>
+            <span class='tooltip-text'>Toggle unimportant questions</span>
             <i class='fa fa-eye fa-2x' aria-hidden='true' style='color: #ececec'></i>
             </span>";
 
@@ -280,6 +281,7 @@ function addToggleButton(){
 
 function addSortButton(){
     $out = "<span class='bubble-for-badge badge-sort' style='cursor: pointer'>
+            <span class='tooltip-text'>Sort</span>
             <i class='fa fa-sort-amount-desc' aria-hidden='true' style='color: #373737'></i>
             </span>";
     return $out;

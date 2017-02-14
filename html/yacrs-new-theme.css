@@ -199,6 +199,33 @@ hr{
     background: #fff;
 }
 
+/* Tooltip text */
+.tooltip-text {
+    visibility: hidden;
+    width: 150px;
+    background-color: #373737;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    margin-top: -5px;
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+    margin-left:20px
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.badge-toggle:hover .tooltip-text {
+    margin-left:-180px;
+    visibility: visible;
+}
+
+.badge-sort:hover .tooltip-text {
+    margin-left:-180px;
+    visibility: visible;
+}
+
 /* Overrides for Bootstrap's mobile theme */
 
 @media (min-width: 768px) {
