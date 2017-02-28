@@ -171,7 +171,7 @@ function displayQuestions($sessionId)
                         <div class='question-content'>
                             $hiddenQiD
                             <a class='question-link' href='ask_question_chat.php?quId=$qId&sessionID=$sessionId'>
-                                <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
+                                <p class='txt-question-$qId' style='font-size:$fontSize'>" . $questionText . "</p>
                             </a>
                             <div style='display: flex; text-align: center; color: #888'>
                             $badge
