@@ -65,7 +65,7 @@ echo $template->render();
 
 function displayQuestions($sessionId)
 {
-    $data['questionResponseInfo']['studentQuInfo'] = studentsQuestion::count("session_id",$sessionId);
+    //$data['questionResponseInfo']['studentQuInfo'] = studentsQuestion::count("session_id",$sessionId);
 
     global $uinfo;
 

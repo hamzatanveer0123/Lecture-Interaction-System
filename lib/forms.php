@@ -46,6 +46,11 @@ memo[60,6] definition "Options:";
 boolean multiuse "This is a generic question to be made available in all my sessions.";
 okcancel 'Create' 'Cancel';
 
+//H2 update for new form
+#form add_studentsQuestion;
+hidden sessionID '0';
+memo[60,4] qu "";
+
 */
 
 class editSession_form extends nbform
