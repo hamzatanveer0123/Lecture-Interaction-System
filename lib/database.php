@@ -165,7 +165,7 @@ class yacrs_studentsQuestion{
    primary key int id;
    string[35] student_id;
    int session_id;
-   string[140] question;
+   string[240] question;
    datetime timeadded;
    int answer_id;
    boolean viewed;
@@ -237,9 +237,9 @@ function initializeDataBase_yacrs()
 	dataConnection::runQuery($query);
 
     //H2 update
-    $query = "CREATE TABLE yacrs_studentsQuestion(id INTEGER PRIMARY KEY AUTO_INCREMENT, student_id VARCHAR(35), session_id INTEGER, question VARCHAR(140), timeadded DATETIME, answer_id INTEGER, viewed INTEGER, pin_location INTEGER, needs_attention INTEGER);";
+    $query = "CREATE TABLE yacrs_studentsQuestion(id INTEGER PRIMARY KEY AUTO_INCREMENT, student_id VARCHAR(35), session_id INTEGER, question VARCHAR(240), timeadded DATETIME, answer_id INTEGER, viewed INTEGER, pin_location INTEGER, needs_attention INTEGER);";
     dataConnection::runQuery($query);
-    $query = "CREATE TABLE yacrs_chat_messages(id INTEGER PRIMARY KEY AUTO_INCREMENT, session_id VARCHAR(35), question_id INTEGER, student_id INTEGER, message TEXT, posted DATE, viewed INTEGER);";
+    $query = "CREATE TABLE yacrs_chat_messages(id INTEGER PRIMARY KEY AUTO_INCREMENT, session_id INTEGER, question_id INTEGER, student_id VARCHAR(35), message TEXT, posted DATE, viewed INTEGER);";
     dataConnection::runQuery($query);
     $query = "CREATE TABLE yacrs_question_liked(id INTEGER PRIMARY KEY AUTO_INCREMENT, session_id INTEGER, question_id INTEGER, student_id VARCHAR(35), liked INTEGER, posted DATETIME);";
     dataConnection::runQuery($query);
