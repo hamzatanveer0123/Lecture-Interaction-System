@@ -574,6 +574,12 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
 	box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
 }
 
+.submit-reply:focus{
+	background-position: 11px 13px !important;
+	box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
+}
+
+
 .btn-best-answer{
 	border-radius: 100px;
 	float: right;

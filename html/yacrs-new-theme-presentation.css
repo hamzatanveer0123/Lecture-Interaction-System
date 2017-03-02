@@ -121,6 +121,12 @@ hr{
     box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
 }
 
+
+.submit-question:focus{
+    background-position: 11px 13px !important;
+    box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
+}
+
 .ask-question{
     width: 45% !important;
     background: white;
@@ -435,32 +441,4 @@ hr{
 .faa-parent.animated-hover:hover > .faa-shake {
     -webkit-animation: wrench 2.5s ease infinite;
     animation: wrench 2.5s ease infinite;
-}
-
-/*For Tooltip*/
-
-/* Tooltip text */
-.tooltip-text {
-    visibility: hidden;
-    width: 150px;
-    background-color: #373737;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-    margin-top: -5px;
-    /* Position the tooltip text - see examples below! */
-    position: absolute;
-    z-index: 1;
-    margin-left:20px
-}
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.badge-pin-container:hover .tooltip-text {
-    visibility: visible;
-}
-
-.badge-toggle:hover .tooltip-text {
-    margin-left:-180px;
-    visibility: visible;
 }

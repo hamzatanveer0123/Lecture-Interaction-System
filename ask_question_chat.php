@@ -146,5 +146,5 @@ function getAJAXScript($sessionID, $questionID)
     return getChatUpdateAJAXScript($questionID,$sessionID);
 }
 ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="javascript/jquery.min.js"></script>
 <script src="javascript/add_questionChat.js"></script>

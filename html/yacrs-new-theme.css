@@ -94,7 +94,12 @@ hr{
     box-shadow:         0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
 }
 
-.submit-question:hover{
+.submit-question:hover {
+    background-position: 11px 13px !important;
+    box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
+}
+
+.submit-question:focus{
     background-position: 11px 13px !important;
     box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
 }
@@ -213,17 +218,6 @@ hr{
     position: absolute;
     z-index: 1;
     margin-left:20px
-}
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.badge-toggle:hover .tooltip-text {
-    margin-left:-180px;
-    visibility: visible;
-}
-
-.badge-sort:hover .tooltip-text {
-    margin-left:-180px;
-    visibility: visible;
 }
 
 /* Overrides for Bootstrap's mobile theme */

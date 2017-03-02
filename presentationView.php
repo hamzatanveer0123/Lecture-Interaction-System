@@ -51,12 +51,10 @@ else
     {
         if(isset($_REQUEST['sessionID']))
             $sessionId = intval($_REQUEST['sessionID']);
-//        $template->pageData['mainBody'] .= addSortButton();
         $template->pageData['mainBody'] .= addToggleButton();
         $template->pageData['mainBody'] .= addOpenPinButton();
         $template->pageData['mainBody'] .= displayQuestions($sessionId);
         $template->pageData['mainBody'] .= pinContainer();
-//        $template->pageData['mainBody'] .= addQuestion($sessionId);
 
     }
     $template->pageData['logoutLink'] = loginBox($uinfo);
@@ -203,39 +201,6 @@ function pinContainer(){
     return $out;
 }
 
-function addQuestion($sessionId)
-{
-    $questionForm = new add_studentsQuestion();
-    switch($questionForm->getStatus())
-    {
-        case FORM_NOTSUBMITTED:
-            //$exampleform->setData($existingdata);
-            $out = $questionForm->getHtml();
-            break;
-        case FORM_SUBMITTED_INVALID:
-            $out = $questionForm->getHtml();
-            break;
-        case FORM_SUBMITTED_VALID:
-            $data = new stdClass();
-            $questionForm->getData($data);
-            // Do stuff with $data
-            // A redirect is likely here, e.g. header('Location:document.php?id='.$data->id);
-            break;
-        case FORM_CANCELED:
-            header('Location:index.php');
-            break;
-    }
-
-    $data = (object) ['session_id' => $sessionId];
-    $questionForm -> setData($data);
-    $out = "<div class='form-container'>";
-    $out .= $questionForm->getHtml();
-    $out .= "</div>";
-
-    $out .= "";
-    return $out;
-}
-
 //need more conditions like
 //if a question has been posted for more than 6hours - close it
 //if a question has been answered - close it
@@ -304,15 +269,7 @@ function ifBeingDiscussed($q){
 
 function addToggleButton(){
     $out = "<span class='bubble-for-badge badge-toggle' style='cursor: pointer'>
-            <span class='tooltip-text'>Toggle Live Feed</span>
             <i class='fa fa-pause' aria-hidden='true' style='color: #ececec'></i>
-            </span>";
-    return $out;
-}
-
-function addSortButton(){
-    $out = "<span class='bubble-for-badge badge-sort' style='cursor: pointer'>
-            <i class='fa fa-sort-amount-desc' aria-hidden='true' style='color: #373737'></i>
             </span>";
     return $out;
 }
@@ -320,13 +277,12 @@ function addSortButton(){
 function addOpenPinButton(){
     $out = "<span class='bubble-for-badge badge-pin-container' style='cursor: pointer; right: auto; left: 10px; padding: 10px; top: 10px;'>
             <img class='card-badge' src='html/icons/icon-pin-left.png'/>
-            <span class='tooltip-text'>Pinned Questions</span>
             </span>";
     return $out;
 }
 
 ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="javascript/jquery.min.js"></script>
 <script src="javascript/presentationView.js"></script>
 
 <!--if new question is added, view all questions dont work-->

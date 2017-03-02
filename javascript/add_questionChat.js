@@ -16,13 +16,14 @@ $('#add_questionChat').on('submit', function (e) {
             data: $('form').serialize(),
             success: function (data) {
                 console.log(data);
+                $('textarea[name="chatMessage"]').val("");
             },
             failure: function (data) {
                 alert(data);
             }
         });
     } else {
-        alert("please add message!");
+        alert("Please add message!");
     }
 });
 
@@ -36,6 +37,7 @@ function selectBestAsnwer(questionId, messageId) {
         },
         success: function (data) {
             console.log(data);
+            location.reload();
         },
         failure: function (data) {
             alert(data);

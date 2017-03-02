@@ -272,7 +272,6 @@ function loadingScreen(){
 
 function addToggleButton(){
     $out = "<span class='bubble-for-badge badge-toggle' style='cursor: pointer'>
-            <span class='tooltip-text'>Toggle unimportant questions</span>
             <i class='fa fa-eye fa-2x' aria-hidden='true' style='color: #ececec'></i>
             </span>";
 
@@ -281,14 +280,13 @@ function addToggleButton(){
 
 function addSortButton(){
     $out = "<span class='bubble-for-badge badge-sort' style='cursor: pointer'>
-            <span class='tooltip-text'>Sort</span>
             <i class='fa fa-sort-amount-desc' aria-hidden='true' style='color: #373737'></i>
             </span>";
     return $out;
 }
 
 ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="javascript/jquery.min.js"></script>
 <script src="javascript/viewQuestions.js"></script>
 
 <!--if new question is added, view all questions dont work-->
