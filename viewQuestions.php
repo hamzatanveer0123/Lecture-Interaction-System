@@ -46,6 +46,25 @@ else
     }
     else
     {
+        //update active users in the session!
+        $smemb = sessionMember::retrieve($uinfo['uname'], $thisSession->id);
+        if($smemb == false)
+        {
+            $smemb = new sessionMember();
+            $smemb->session_id = $thisSession->id;
+            $smemb->userID = $uinfo['uname'];
+            $smemb->name = $uinfo['gn'].' '.$uinfo['sn'];
+            $smemb->email = $uinfo['email'];
+            $smemb->joined = time();
+            $smemb->lastresponse = time();
+            $smemb->insert();
+        }
+        else
+        {
+            $smemb->lastresponse = time();
+            $smemb->update();
+        }
+
         if(isset($_REQUEST['sessionID']))
             $sessionId = intval($_REQUEST['sessionID']);
         $template->pageData['mainBody'] .= loadingScreen();
