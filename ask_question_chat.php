@@ -116,7 +116,7 @@ else
                 $username   = $user->name;
                 $posted     = ago($bestAnswer->posted);
             }
-            $answer = '<div class="info correct-answer"><p class="bubble" style="border-radius: 5px;">'.$bestAnswer->message.'</p><p class="meta"><span class="username">'.$username.'</span><span class="time">'.$posted.'</span></p></div>';
+            $answer = '<div class="info correct-answer"><p class="bubble" style="border-radius: 5px;">'.$bestAnswer->message.'</p><p class="meta"><span class="username">anonymous</span><span class="time">'.$posted.'</span></p></div>';
         }
 
         $question = studentsQuestion::retrieve_studentsQuestion_matching("id",$questionID);
