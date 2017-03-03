@@ -115,6 +115,7 @@ $('#add_studentsQuestion').on('submit', function (e) {
                 console.log(data);
                 $(".message-container").animate({ scrollTop: $(".message-container").prop("scrollHeight")}, "slow");
                 $('textarea[name="question"]').val("");
+                $('#chars').text("240");
             },
             failure: function (data) {
                 alert(data);
