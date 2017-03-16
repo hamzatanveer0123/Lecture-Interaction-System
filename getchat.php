@@ -1,5 +1,4 @@
 <?php
-
 /*****************************************************************************
 YACRS Copyright 2013, University of Glasgow.
 Written by Niall S F Barr (niall.barr@glasgow.ac.uk, niall@nbsoftware.com)
@@ -47,7 +46,7 @@ if($messages){
         }
         else
         {
-            echo '"><p class="bubble">'.$m->message . $bestAnswer .'</p><p class="meta"><span class="username">'.$user->name.'</span><span class="time">'.ago($m->posted).'</span></p></div>';
+            echo '<div class="info"><p class="bubble">'.$m->message. $bestAnswer .'</p><p class="meta"><span class="username">'.$user->name.'</span><span class="time">'.ago($m->posted).'</span></p></div>';
         }
     }
 } else {
