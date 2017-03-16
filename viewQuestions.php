@@ -148,7 +148,7 @@ function displayQuestions($sessionId)
                 $out .= "<div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention'>
                             <div class='question-content'>
                                 $hiddenQiD
-                                <p class='txt-question-$qId' style='font-size:$fontSize'>" . $questionText . "</p>
+                                <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
                                 <hr/>
                                 <div style='display: flex; text-align: center; color: #888'>
                                 $badge
@@ -165,7 +165,7 @@ function displayQuestions($sessionId)
                 $out .= "<div class='col-sm-12 ask-question question-$qId hide-unImpQuestion' data-attention='$needsAttention'>
                             <div class='question-content $hide'>
                                 $hiddenQiD
-                                <p class='txt-question-$qId' style='font-size:$fontSize'>" . $questionText . "</p>
+                                <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
                                 <hr/>
                                 <div style='display: flex; text-align: center; color: #888'>
                                 $badge
