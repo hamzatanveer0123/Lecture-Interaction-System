@@ -47,23 +47,26 @@ else
     else
     {
         //update active users in the session!
-        $smemb = sessionMember::retrieve($uinfo['uname'], $thisSession->id);
-        if($smemb == false)
-        {
-            $smemb = new sessionMember();
-            $smemb->session_id = $thisSession->id;
-            $smemb->userID = $uinfo['uname'];
-            $smemb->name = $uinfo['gn'].' '.$uinfo['sn'];
-            $smemb->email = $uinfo['email'];
-            $smemb->joined = time();
-            $smemb->lastresponse = time();
-            $smemb->insert();
-        }
-        else
-        {
-            $smemb->lastresponse = time();
-            $smemb->update();
-        }
+//        //todo: update the activity using javascript after every min
+//        $smemb = sessionMember::retrieve($uinfo['uname'], $thisSession->id);
+//        if($smemb == false)
+//        {
+//            $smemb = new sessionMember();
+//            $smemb->session_id = $thisSession->id;
+//            $smemb->userID = $uinfo['uname'];
+//            $smemb->name = $uinfo['gn'].' '.$uinfo['sn'];
+//            $smemb->email = $uinfo['email'];
+//            $smemb->joined = time();
+//            $smemb->lastresponse = time();
+//            $smemb->insert();
+//        }
+//        else
+//        {
+//            echo "updatd";
+//            echo time();
+//            $smemb->lastresponse = time();
+//            $smemb->update();
+//        }
 
         if(isset($_REQUEST['sessionID']))
             $sessionId = intval($_REQUEST['sessionID']);
@@ -84,8 +87,6 @@ echo $template->render();
 
 function displayQuestions($sessionId)
 {
-    //$data['questionResponseInfo']['studentQuInfo'] = studentsQuestion::count("session_id",$sessionId);
-
     global $uinfo;
 
     $loggedInUser = $uinfo['uname'];
@@ -376,6 +377,20 @@ function addSortButton(){
                         }
                     }
                 }
+            }
+        });
+    }
+
+    setInterval(updateUserActivity(), 60000);
+    function updateUserActivity() {
+        $.ajax({
+            type: "POST",
+            url: "ajax_update_user_activity.php",
+            data: {
+                session_id: <?php echo $sessionId; ?>
+            },
+            success: function(){
+                console.log("updated!");
             }
         });
     }

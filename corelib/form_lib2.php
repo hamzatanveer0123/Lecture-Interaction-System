@@ -351,7 +351,7 @@ abstract class nbform
         if($required)
         	$out .= '<span style="color: Red;">*</span>';
 	    $out .= '</label>';
-	    $out .= '<div class="col-sm-8">';
+	    $out .= '<div class="col-sm-12">';
 	    if((is_array($validateMsgs))&&(array_key_exists($name, $validateMsgs)))
 	        $out .= "<div class=\"alert alert-error\">{$validateMsgs[$name]}</div>";
 	    $out .= "<textarea name=\"$name\" class=\"form-control\" rows=\"$height\"";

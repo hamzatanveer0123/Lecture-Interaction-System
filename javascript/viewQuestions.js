@@ -11,9 +11,9 @@ $( document ).ready(function() {
     //word count for question textarea
     var maxLength = 240;
     $('.ask-question-textarea').keyup(function() {
-        var length = $(this).val().length;
-        var length = maxLength-length;
-        $('#chars').text(length);
+        var strLength = $(this).val().length;
+        var remainder = maxLength-strLength;
+        $('#chars').text(remainder);
     });
 
 });

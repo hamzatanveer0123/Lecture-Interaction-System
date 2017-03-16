@@ -26,10 +26,10 @@ if (isset($_POST['liked'])) {
     $liked = $_POST['liked'];
 }
 
+$question_liked = new question_liked();
+$question = new studentsQuestion();
+
 if($liked == 1) {
-
-    $question_liked = new question_liked();
-
     $question_liked->session_id = $session_id;
     $question_liked->question_id = $question_id;
     $question_liked->student_id = $student_id;
@@ -37,16 +37,10 @@ if($liked == 1) {
     $question_liked->posted = time();
 
     $id = $question_liked->insert();
-
-    $question = new studentsQuestion();
     $question->plusOneAttention($question_id);
-
     echo $id;
+
 } else {
-    $question_liked = new question_liked();
     $question_liked->removeLiked($question_id,$student_id);
-
-    $question = new studentsQuestion();
     $question->minusOneAttention($question_id);
-
 }

@@ -1,4 +1,3 @@
-<!--H2 update-->
 <?php
 
 /*****************************************************************************
@@ -25,9 +24,6 @@ $uinfo = checkLoggedInUser();
 
 //H2 update to mark right answer
 $qId = $_REQUEST['questionID'];
-$sessionId = $_REQUEST['sessionID'];
-
-$session = session::retrieve_session($sessionId);
 
 $messages = chat_messages::retrieve_chat_messages_matching("question_id", $qId, 0, -1, "id DESC");
 

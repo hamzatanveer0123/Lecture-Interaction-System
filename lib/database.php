@@ -2170,6 +2170,18 @@ class sessionMember
 			return $result['0']['count'];
 	}
 
+	//H2 update
+    static function countActiveLastMin($sessionID, $lastMin=1)
+    {
+        $since = dataConnection::time2db(time()-(60*$lastMin));
+        $query = "SELECT COUNT(*) AS count FROM yacrs_sessionMember WHERE session_id='".dataConnection::safe($sessionID)."' AND lastresponse > '$since';";
+        $result = dataConnection::runQuery($query);
+        if($result == false)
+            return 0;
+        else
+            return $result['0']['count'];
+    }
+
 	static function retrieveByMobileNo($mobileNo)
 	{
 	    $query = "SELECT * FROM yacrs_sessionMember WHERE mobile='".dataConnection::safe($mobileNo)."'";

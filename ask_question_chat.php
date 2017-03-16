@@ -119,32 +119,46 @@ else
             $answer = '<div class="info correct-answer"><p class="bubble" style="border-radius: 5px;">'.$bestAnswer->message.'</p><p class="meta"><span class="username">anonymous</span><span class="time">'.$posted.'</span></p></div>';
         }
 
+        //form add_questionChat
+        $add_question = new add_questionChat();
+        //setting data in form
+        $data = (object) ['question_id' => $questionID];
+        $add_question -> setData($data);
+
         $question = studentsQuestion::retrieve_studentsQuestion_matching("id",$questionID);
         $questionText = $question[0]->question;
-        $template->pageData['afterContent'] = getAJAXScript($thisSession->id, $questionID);
         $template->pageData['breadcrumb'] .= "<li><a href='session_page.php?sessionID={$thisSession->id}'>{$thisSession->title}</a></li>";
         $template->pageData['breadcrumb'] .= $breadcrumb;
         $template->pageData['breadcrumb'] .= "<li>Discussion</li>";
         $template->pageData['mainBody'] .= '<h2 style="text-decoration: underline">Discuss<span class="hidden-xs"> This Question</h2>';
         $template->pageData['mainBody'] .= '<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$questionText.'</h3>';
         $template->pageData['mainBody'] .= '<h3>'.$answer.'</h3>';
-        $template->pageData['mainBody'] .= "<form id='add_questionChat' method='POST' class='form-horizontal'><div class='form-group'>";
-        $template->pageData['mainBody'] .= "<div class='col-sm-12 col-xs-12'><input type='hidden' name='questionID' value='{$thisQuestion->id}' />";
-        $template->pageData['mainBody'] .= "<input type='hidden' name='sessionID' value='{$thisSession->id}' />";
-        $template->pageData['mainBody'] .= "<textarea name='chatMessage' rows='3' class='form-control input-reply'></textarea>";
-        $template->pageData['mainBody'] .= "<input type='submit' name='submit' value='' class='btn btn-block btn-info submit-reply'/></div>";
-        $template->pageData['mainBody'] .= "</div></form>";
+        $template->pageData['mainBody'] .= $add_question->getHtml();
         $template->pageData['mainBody'] .= "<div id='messages'></div></div>";
     }
-    //$template->pageData['mainBody'] .= '<pre>'.print_r($uinfo,1).'</pre>';
-    //$template->pageData['mainBody'] .= '<pre>'.print_r($smemb,1).'</pre>';
     $template->pageData['logoutLink'] = loginBox($uinfo);
 }
 echo $template->render();
-function getAJAXScript($sessionID, $questionID)
-{
-    return getChatUpdateAJAXScript($questionID,$sessionID);
-}
 ?>
 <script src="javascript/jquery.min.js"></script>
 <script src="javascript/add_questionChat.js"></script>
+<script>
+
+    $(document).ready(function () {
+       updateChat();
+    });
+
+    setInterval("updateChat()",1000);
+    function updateChat() {
+        $.ajax({
+            type: "POST",
+            url: "getchat.php",
+            data: {
+                questionID: <?php echo $questionID; ?>,
+            },
+            success: function(html) {
+                $('#messages').html(html);
+            }
+        });
+    }
+</script>

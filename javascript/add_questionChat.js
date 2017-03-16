@@ -5,7 +5,6 @@
 //var height = $("#add_questionChat .submit").css("height");
 // $("#add_questionChat .submit").css("width", height);
 
-
 $('#add_questionChat').on('submit', function (e) {
     e.preventDefault();
 

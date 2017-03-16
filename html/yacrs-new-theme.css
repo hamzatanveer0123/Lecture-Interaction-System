@@ -75,33 +75,7 @@ hr{
 }
 
 .submit-question{
-    position:absolute;
-    bottom:23px;
-    right:8px;
-    border: 0px solid transparent !important;
-    border-radius: 100px !important;
-    background-color: #197fcd !important;
-    background-image: url("icons/icon-send.png") !important;
-    background-repeat: no-repeat !important;
-    background-size: 24px 24px;
-    background-position: 11px 13px;
-    width: 48px !important;
-    height: 48px !important;
-    padding: 10px !important;
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-    -webkit-box-shadow: 0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
-    -moz-box-shadow:    0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
-    box-shadow:         0px 3px 3px 0px rgba(124, 124, 124, 0.3) !important;
-}
-
-.submit-question:hover {
-    background-position: 11px 13px !important;
-    box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
-}
-
-.submit-question:focus{
-    background-position: 11px 13px !important;
-    box-shadow: 0 10px 12px rgba(124, 124, 124, 0.3) !important;
+    bottom:23px !important;
 }
 
 .ask-question{

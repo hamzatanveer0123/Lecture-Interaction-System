@@ -131,7 +131,7 @@ function pinQuestion(qID, thisPin, isPinned, sessionID) {
             if(isPinned == 0){
                 $(thisPin).attr("onclick","pinQuestion("+qID+",this,1,"+sessionID+")");
                 var question = escapeHTML($($(".question-"+qID)[0]).find("p").text());
-                var link = "<a href='ask_question_chat.php?qId="+qID+"&sessionID="+sessionID+"'>"+question+"</a>"
+                var link = "<a href='ask_question_chat.php?quId="+qID+"&sessionID="+sessionID+"'>"+question+"</a>"
                 var html = "<div class='pin-container-question pinned-"+qID+"'>"+link+"</div>";
                 $(".pinned-questions").append(html);
 

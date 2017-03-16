@@ -83,7 +83,7 @@ else
 
     $template->pageData['mainBody'] = "<h1 style='text-align:center;'>Session ID: {$thisSession->id}</h1>";
     $userCount = sessionMember::count("session_id", $thisSession->id);
-    $activeCount = sessionMember::countActive($thisSession->id);
+    $activeCount = sessionMember::countActiveLastMin($thisSession->id);
     $template->pageData['mainBody'] .= "<p><a href='sessionmembers.php?sessionID={$thisSession->id}'>Active users (total users): $activeCount ($userCount)</a></p>";
     $template->pageData['mainBody'] .= DaySelectForm($thisSession->id);
     $template->pageData['mainBody'] .= "<h2>Session Questions</h2>";

@@ -15,11 +15,11 @@ $student_id     = $uinfo['uname'];
 $question_id    = "";
 $message        = "";
 
-if(isset($_POST['sessionID'])){
-    $session_id=$_POST['sessionID'];
+if(isset($_POST['session_id'])){
+    $session_id=$_POST['session_id'];
 }
-if(isset($_POST['questionID'])){
-    $question_id=$_POST['questionID'];
+if(isset($_POST['question_id'])){
+    $question_id=$_POST['question_id'];
 }
 if(isset($_POST['chatMessage'])){
     $message = htmlspecialchars($_POST['chatMessage']);
