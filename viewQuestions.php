@@ -145,7 +145,7 @@ function displayQuestions($sessionId)
             //check if there is any reaction on question
             if ($ifActive || $beingDiscussed) {
                 $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-                $out .= "<div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention'>
+                $out .= "<div class='col-sm-12 ask-question question-$qId' data-attention='$needsAttention' data-id='$qId'>
                             <div class='question-content'>
                                 $hiddenQiD
                                 <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
@@ -162,7 +162,7 @@ function displayQuestions($sessionId)
             } else {
                 $hide  = "hide-card-details";
                 $badge = ($beingDiscussed) ? $showBadge : $hideBadge;
-                $out .= "<div class='col-sm-12 ask-question question-$qId hide-unImpQuestion' data-attention='$needsAttention'>
+                $out .= "<div class='col-sm-12 ask-question question-$qId hide-unImpQuestion' data-attention='$needsAttention' data-id='$qId'>
                             <div class='question-content $hide'>
                                 $hiddenQiD
                                 <p class='txt-question-$qId' style='font-size:$fontSize' title='Asked By: " . $studentId . "'>" . $questionText . "</p>
