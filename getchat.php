@@ -46,7 +46,7 @@ if($messages){
         }
         else
         {
-            echo '<div class="info"><p class="bubble">'.$m->message. $bestAnswer .'</p><p class="meta"><span class="username">'.$user->name.'</span><span class="time">'.ago($m->posted).'</span></p></div>';
+            echo '<div class="info"><p class="bubble">'.$m->message. $bestAnswer .'</p><p class="meta"><span class="username">Anonymous</span><span class="time">'.ago($m->posted).'</span></p></div>';
         }
     }
 } else {
