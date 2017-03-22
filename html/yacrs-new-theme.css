@@ -101,6 +101,7 @@ hr{
     padding-left: 8px;
     padding-right: 8px;
     text-decoration: none;
+    word-break: break-word;
 }
 
 .card-buttons{
