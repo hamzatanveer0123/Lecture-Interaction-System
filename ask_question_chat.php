@@ -18,8 +18,6 @@ if($deviceType=='mobile')
 else
     $template->pageData['modechoice'] = "<a href='{$_SERVER['PHP_SELF']}?sessionID={$sessionID}&mode=mobile'>Use mobile mode</a>";
 
-//H2 hack for fake login
-//$uinfo = userInfo::retrieve_fakeUserInfo(5);
 $uinfo = checkLoggedInUser();
 
 
@@ -106,6 +104,7 @@ else
             }
         }
 
+        //find the best answer to the question if any
         $bestAnswer = studentsQuestion::getBestAnswer($questionID);
         $bestAnswer = $bestAnswer[0];
 
@@ -116,15 +115,17 @@ else
                 $username   = $user->name;
                 $posted     = ago($bestAnswer->posted);
             }
-            $answer = '<div class="info correct-answer"><p class="bubble" style="border-radius: 5px;">'.$bestAnswer->message.'</p><p class="meta"><span class="username">anonymous</span><span class="time">'.$posted.'</span></p></div>';
+            $answer = '<div class="info correct-answer"><p class="bubble" style="border-radius: 5px;">'.$bestAnswer->message.'</p><p class="meta"><span class="username">'.$username.'</span><span class="time">'.$posted.'</span></p></div>';
         }
 
         //form add_questionChat
         $add_question = new add_questionChat();
+
         //setting data in form
         $data = (object) ['question_id' => $questionID];
         $add_question -> setData($data);
 
+        //displaying the question, best answer, form and the chat
         $question = studentsQuestion::retrieve_studentsQuestion_matching("id",$questionID);
         $questionText = $question[0]->question;
         $template->pageData['breadcrumb'] .= "<li><a href='session_page.php?sessionID={$thisSession->id}'>{$thisSession->title}</a></li>";
@@ -148,6 +149,7 @@ echo $template->render();
        updateChat();
     });
 
+    //update chat after every second
     setInterval("updateChat()",1000);
     function updateChat() {
         $.ajax({
